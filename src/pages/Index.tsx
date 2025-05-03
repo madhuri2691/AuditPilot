@@ -5,7 +5,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Download, Check, Clock, ArrowRight } from "lucide-react";
+import { 
+  Search, 
+  Filter, 
+  Download, 
+  Check, 
+  Clock, 
+  ArrowRight,
+  FileText,
+  Users,
+  Database
+} from "lucide-react";
 import { ClientsList } from "@/components/clients/ClientsList";
 import { TasksList } from "@/components/tasks/TasksList";
 

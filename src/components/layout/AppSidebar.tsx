@@ -1,4 +1,3 @@
-
 import { 
   Sidebar, 
   SidebarContent, 
@@ -69,7 +68,7 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar defaultCollapsed={false} collapsible={true}>
+    <Sidebar defaultCollapsed={false} collapsible="icon">
       <SidebarHeader className="p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-audit-primary">Audit Task Master</h2>
