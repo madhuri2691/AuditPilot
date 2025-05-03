@@ -1,3 +1,4 @@
+
 import { Client } from "@/components/clients/ClientsList";
 import { Task } from "@/components/tasks/TaskModel";
 import { 
@@ -1200,7 +1201,7 @@ const createCorporateEngagementLetter = (
   });
 };
 
-// Similar implementation for other engagement letter types (partnership, trust, proprietorship)
+// Partnership engagement letter implementation
 const createPartnershipEngagementLetter = (
   client: Client,
   date: string,
@@ -1251,3 +1252,1276 @@ const createPartnershipEngagementLetter = (
             ],
           }),
           new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.name}` }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.address || "[Registered Address]"}` }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "Dear Sirs," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Subject: Engagement Letter for Statutory Audit for FY ${financialYearEnded}`,
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `We are pleased to confirm our acceptance and understanding of the terms of our engagement to audit the financial statements of ${client.name} for the financial year ended ${financialYearEnded}.`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Our audit will be conducted in accordance with the Standards on Auditing issued by the Institute of Chartered Accountants of India. We will plan and perform the audit to obtain reasonable assurance about whether the financial statements are free from material misstatement.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "As part of our audit process, we will request written representations from management concerning assertions made in connection with the audit.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Fees for our services will be based on standard rates, plus out-of-pocket expenses. Invoices will be submitted as work progresses.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Please sign and return the attached copy of this letter to indicate your acknowledgment of, and agreement with, the arrangements for our audit of the financial statements.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Yours faithfully,",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "For Muralidhar & Associates",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Partner",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Acknowledged and Agreed:",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `For ${client.name}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Trust engagement letter implementation
+const createTrustEngagementLetter = (
+  client: Client,
+  date: string,
+  financialYearEnded: string
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "ENGAGEMENT LETTER – TRUST",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: "[Letterhead of the Auditor]",
+                italics: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "To," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "The Trustees," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.name}` }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.address || "[Registered Address]"}` }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "Dear Sirs," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Subject: Engagement Letter for Statutory Audit for FY ${financialYearEnded}`,
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `We are pleased to confirm our acceptance and understanding of the terms of our engagement to audit the financial statements of ${client.name} for the financial year ended ${financialYearEnded}.`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Our audit will be conducted in accordance with the Standards on Auditing issued by the Institute of Chartered Accountants of India. We will plan and perform the audit to obtain reasonable assurance about whether the financial statements are free from material misstatement.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "As part of our audit process, we will request written representations from management concerning assertions made in connection with the audit.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Fees for our services will be based on standard rates, plus out-of-pocket expenses. Invoices will be submitted as work progresses.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Please sign and return the attached copy of this letter to indicate your acknowledgment of, and agreement with, the arrangements for our audit of the financial statements.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Yours faithfully,",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "For Muralidhar & Associates",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Partner",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Acknowledged and Agreed:",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `For ${client.name}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Proprietorship engagement letter implementation
+const createProprietorshipEngagementLetter = (
+  client: Client,
+  date: string,
+  financialYearEnded: string
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "ENGAGEMENT LETTER – PROPRIETORSHIP",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: "[Letterhead of the Auditor]",
+                italics: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "To," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "The Proprietor," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.name}` }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.address || "[Registered Address]"}` }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "Dear Sir," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Subject: Engagement Letter for Statutory Audit for FY ${financialYearEnded}`,
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `We are pleased to confirm our acceptance and understanding of the terms of our engagement to audit the financial statements of ${client.name} for the financial year ended ${financialYearEnded}.`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Our audit will be conducted in accordance with the Standards on Auditing issued by the Institute of Chartered Accountants of India. We will plan and perform the audit to obtain reasonable assurance about whether the financial statements are free from material misstatement.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "As part of our audit process, we will request written representations from management concerning assertions made in connection with the audit.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Fees for our services will be based on standard rates, plus out-of-pocket expenses. Invoices will be submitted as work progresses.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Please sign and return the attached copy of this letter to indicate your acknowledgment of, and agreement with, the arrangements for our audit of the financial statements.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Yours faithfully,",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "For Muralidhar & Associates",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Partner",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Acknowledged and Agreed:",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `For ${client.name}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Consent letter implementation
+const createConsentLetter = (
+  client: Client,
+  date: string,
+  cinNumber: string
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "AUDITOR'S CONSENT LETTER",
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: "[Auditor's Letterhead]",
+                italics: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "To," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "The Board of Directors," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.name}` }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `${client.address || "[Registered Address of the Company]"}` }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: `CIN: ${cinNumber}` }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({ text: "Dear Sir/Madam," }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [
+              new TextRun({
+                text: "Subject: Consent to act as Statutory Auditor under Section 139 of the Companies Act, 2013",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `With reference to your intimation regarding my/our proposed appointment as the Statutory Auditor of ${client.name} in accordance with the provisions of Section 139 of the Companies Act, 2013 read with the rules made thereunder, I/we hereby give my/our consent to act as the Statutory Auditor of the Company, if appointed at the forthcoming Annual General Meeting/Extraordinary General Meeting of the Company.`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "I/We confirm that:",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "I/We meet the eligibility criteria prescribed under Section 141 of the Companies Act, 2013.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "I/We are not disqualified to be appointed as auditor under the provisions of the said Act.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "The appointment, if made, shall be within the limits prescribed under Section 141(3)(g) of the Companies Act, 2013.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "I/We are eligible to be appointed as an auditor of the company and are not disqualified under the Chartered Accountants Act, 1949 and the rules or regulations made thereunder.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Kindly take the above on record.",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Thanking you,",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Yours faithfully,",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "For Muralidhar & Associates",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Chartered Accountants",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Firm Registration Number: XXXXXX",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "_________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Partner",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Membership Number: XXXXXX",
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Audit plan implementation
+const createAuditPlan = (
+  client: Client,
+  date: string,
+  financialYearEnded: string,
+  task?: Task
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [
+              new TextRun({
+                text: "AUDIT PLAN",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "Client Details",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Client Name: ${client.name}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Entity Type: ${client.constitution?.charAt(0).toUpperCase() + client.constitution?.slice(1) || "Company"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Financial Year Ending: ${financialYearEnded}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Industry: ${client.industry || "_________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Engagement Partner: ${client.auditPartner || "_________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Audit Team Members: ${client.assignmentStaff || "_________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Date of Planning: ${date}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "1. Engagement Objectives",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "To express an opinion on whether the financial statements give a true and fair view in accordance with the applicable financial reporting framework.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "To identify and assess the risks of material misstatement.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "To obtain sufficient and appropriate audit evidence.",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `${task ? `To perform ${task.typeOfService} for the client.` : "[Add specific objectives, e.g., checking compliance with specific statutes.]"}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "2. Understanding the Entity",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Nature of Business: ${client.industry || "_________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Key Business Processes: _______________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Significant Changes During the Year: _____________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Internal Controls Summary: _____________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Related Parties / Group Structure: _______________________",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "3. Risk Assessment",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Inherent Risks: ${client.risk === "High" ? "High risk identified in key areas." : "Standard industry risks identified."}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Control Risks: To be assessed during fieldwork",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Fraud Risk Indicators: To be assessed during fieldwork",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "4. Materiality Levels",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Planning Materiality: _________________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Performance Materiality: _____________________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Threshold for Trivial Misstatements: _________________",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "5. Significant Accounts & Areas of Focus",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Revenue: High - Substantive testing, Cut-off tests",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Purchases: Medium - Tests of controls, Substantive sampling",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Fixed Assets: Medium - Physical verification, Depreciation recalculation",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Loans & Borrowings: Low - External confirmations",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Provisions/Contingent Liabilities: High - Legal letters, Management representations",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "GST/Income Tax Compliance: High - Detailed compliance testing",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "6. Audit Strategy",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Nature, Timing & Extent of Procedures:",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Interim testing: No",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Final audit procedures planned for: ${client.auditCompletionDate || "___________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Use of Sampling Techniques: Yes",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Use of Specialists (e.g., Valuers, Lawyers): No",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "IT Environment Assessment: Yes",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "7. Team Roles and Responsibilities",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `${client.auditPartner || "___________________"} - Partner - Overall engagement supervision`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Manager - Planning, risk assessment",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `${client.assignmentStaff || "___________________"} - Audit Assistant - Fieldwork, documentation`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "8. Timeline",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Client Communication: ${client.auditStartDate || "__________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Fieldwork Start: ${client.auditStartDate || "__________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Completion of Fieldwork: ${client.auditCompletionDate || "__________________"}`,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Review & Finalization: __________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Signing of Audit Report: __________________",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "9. Client Requirements",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Trial Balance as on ___________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Ledger & Sub-ledger Reports",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Fixed Asset Register",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Statutory Returns (GST, TDS, PF, etc.)",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "MOA, AOA / Partnership Deed / Trust Deed",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Minutes of Meetings, if applicable",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Previous year's audit report and financials",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            children: [
+              new TextRun({
+                text: "10. Sign-Off",
+                bold: true,
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Prepared By: ______________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: `Date: ${date}`,
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Reviewed By: ______________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Date: ___________",
+              }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Approved By: ______________________",
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Date: ___________",
+              }),
+            ],
+          }),
+        ],
+      },
+    ],
+  });
+};
