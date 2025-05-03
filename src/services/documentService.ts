@@ -1,3 +1,4 @@
+
 import { Client } from "@/components/clients/ClientsList";
 import { Task } from "@/components/tasks/TaskModel";
 import { 
@@ -100,8 +101,9 @@ export const generateConsentLetter = async (
 ): Promise<Blob> => {
   const { client, additionalData } = data;
   const date = additionalData?.date || formatDate(new Date());
+  const cinNumber = additionalData?.cinNumber || "___________";
 
-  const doc = createConsentLetter(client, date);
+  const doc = createConsentLetter(client, date, cinNumber);
   return Packer.toBlob(doc);
 };
 
@@ -1015,7 +1017,7 @@ const createProprietorshipEngagementLetter = (
           }),
           new Paragraph({ text: "" }),
           new Paragraph({
-            text: "We are pleased to confirm our acceptance and understanding of the terms of our engagement to audit the financial statements of " + client.name + " for the financial year ended " + financialYearEnded + ".",
+            text: `We are pleased to confirm our acceptance and understanding of the terms of our engagement to audit the financial statements of ${client.name} for the financial year ended ${financialYearEnded}.`,
             alignment: AlignmentType.LEFT,
           }),
           new Paragraph({ text: "" }),
@@ -1026,4 +1028,425 @@ const createProprietorshipEngagementLetter = (
           new Paragraph({ text: "" }),
           new Paragraph({
             text: "As part of our audit process, we will request written representations from management concerning assertions made in connection with the audit.",
-            alignment:
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Fees for our services will be based on standard rates, plus out-of-pocket expenses. Invoices will be submitted as work progresses.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Please sign and return the attached copy of this letter to indicate your acknowledgment of, and agreement with, the arrangements for our audit of the financial statements.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Yours faithfully,",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "For Muralidhar & Associates",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "_________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Partner",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Acknowledged and Agreed:",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "_________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `For ${client.name}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: `Date: ${date}`,
+            alignment: AlignmentType.LEFT,
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Create consent letter
+const createConsentLetter = (
+  client: Client,
+  date: string,
+  cinNumber: string
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            text: "AUDITOR'S CONSENT LETTER",
+            heading: HeadingLevel.HEADING_1,
+            alignment: AlignmentType.CENTER,
+          }),
+          new Paragraph({
+            text: "[Auditor's Letterhead]",
+            alignment: AlignmentType.CENTER,
+            italics: true,
+          }),
+          new Paragraph({
+            text: `Date: ${date}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "To",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "The Board of Directors",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `${client.name}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `${client.address || "[Registered Address of the Company]"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `CIN: ${cinNumber}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Dear Sir/Madam,",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Subject: Consent to act as Statutory Auditor under Section 139 of the Companies Act, 2013",
+            alignment: AlignmentType.LEFT,
+            bold: true,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: `With reference to your intimation regarding my/our proposed appointment as the Statutory Auditor of ${client.name} in accordance with the provisions of Section 139 of the Companies Act, 2013 read with the rules made thereunder, I/we hereby give my/our consent to act as the Statutory Auditor of the Company, if appointed at the forthcoming Annual General Meeting/Extraordinary General Meeting of the Company.`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "I/We confirm that:",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "I/We meet the eligibility criteria prescribed under Section 141 of the Companies Act, 2013.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "I/We are not disqualified to be appointed as auditor under the provisions of the said Act.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "The appointment, if made, shall be within the limits prescribed under Section 141(3)(g) of the Companies Act, 2013.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "I/We are eligible to be appointed as an auditor of the company and are not disqualified under the Chartered Accountants Act, 1949 and the rules or regulations made thereunder.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Kindly take the above on record.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Thanking you,",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Yours faithfully,",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "For [Name of the Audit Firm]",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "[Firm Registration Number]",
+            alignment: AlignmentType.LEFT,
+          }),
+        ],
+      },
+    ],
+  });
+};
+
+// Create audit plan
+const createAuditPlan = (
+  client: Client,
+  date: string,
+  financialYearEnded: string,
+  task?: Task
+): Document => {
+  return new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          new Paragraph({
+            text: "AUDIT PLAN",
+            heading: HeadingLevel.HEADING_1,
+            alignment: AlignmentType.CENTER,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Client Details",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Client Name: ${client.name}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Entity Type: ${client.constitution || "Company / Partnership / Proprietorship / Trust / Others"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Financial Year Ending: ${financialYearEnded}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Industry: ${client.industry || "_________________"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Engagement Partner: ${client.auditPartner || "_________________"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Audit Team Members: ${client.assignmentStaff || "_________________"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Date of Planning: ${date}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "1. Engagement Objectives",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "To express an opinion on whether the financial statements give a true and fair view in accordance with the applicable financial reporting framework.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "To identify and assess the risks of material misstatement.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "To obtain sufficient and appropriate audit evidence.",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: `${task?.description ? `[${task.description}]` : "[Add specific objectives, e.g., checking compliance with specific statutes.]"}`,
+            alignment: AlignmentType.LEFT,
+            italics: true,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "2. Understanding the Entity",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Nature of Business: ${client.industry || "____________________________________"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Key Business Processes: _______________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Significant Changes During the Year: _____________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Internal Controls Summary: _____________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Related Parties / Group Structure: _______________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "3. Risk Assessment",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Inherent Risks: ${client.risk === "High" ? "High risk areas identified based on initial assessment" : "To be assessed during preliminary procedures"}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Control Risks: To be assessed during internal control testing",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Fraud Risk Indicators: To be evaluated during planning discussions",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "4. Materiality Levels",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Planning Materiality: _________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Performance Materiality: _____________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Threshold for Trivial Misstatements: _________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "5. Significant Accounts & Areas of Focus",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Account/Area | Risk Level | Planned Audit Procedures",
+            alignment: AlignmentType.LEFT,
+            bold: true,
+          }),
+          new Paragraph({
+            text: "Revenue | High | [E.g., Substantive testing, Cut-off tests]",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Purchases | Medium | __________________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Fixed Assets | Medium | __________________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Loans & Borrowings | Low | __________________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Provisions/Contingent Liabilities | High | __________________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "GST/Income Tax Compliance | High | __________________________________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "6. Timeline",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Activity | Planned Date | Responsible",
+            alignment: AlignmentType.LEFT,
+            bold: true,
+          }),
+          new Paragraph({
+            text: `Client Communication | ${date} | ___________`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Fieldwork Start | ${client.auditStartDate || "__________________"} | ___________`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Completion of Fieldwork | ${client.auditCompletionDate || "__________________"} | ___________`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Review & Finalization | __________________ | ___________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Signing of Audit Report | __________________ | ___________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "7. Sign-Off",
+            heading: HeadingLevel.HEADING_2,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Prepared By: ______________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: `Date: ${date}`,
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Reviewed By: ______________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Date: ___________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            text: "Approved By: ______________________",
+            alignment: AlignmentType.LEFT,
+          }),
+          new Paragraph({
+            text: "Date: ___________",
+            alignment: AlignmentType.LEFT,
+          }),
+        ],
+      },
+    ],
+  });
+};
