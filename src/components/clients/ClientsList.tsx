@@ -94,7 +94,7 @@ export function ClientsList() {
                   client.status === "Active"
                     ? "default"
                     : client.status === "Completed"
-                    ? "success"
+                    ? "secondary"
                     : "outline"
                 }
               >

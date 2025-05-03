@@ -99,7 +99,7 @@ export function TasksList() {
                     ? "secondary"
                     : task.status === "Review"
                     ? "default"
-                    : "success"
+                    : "secondary"
                 }
               >
                 {task.status}
