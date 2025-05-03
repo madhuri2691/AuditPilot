@@ -19,6 +19,16 @@ export interface Client {
   risk: "High" | "Medium" | "Low";
   fiscalYearEnd: string;
   contactPerson: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  constitution?: string;
+  auditFee?: string;
+  engagementType?: string;
+  auditStartDate?: string;
+  auditCompletionDate?: string;
+  assignmentStaff?: string;
+  auditPartner?: string;
 }
 
 const clients: Client[] = [
