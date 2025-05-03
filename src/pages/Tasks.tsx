@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,7 +50,11 @@ const Tasks = () => {
     if (newStatus === "Complete") {
       const taskToMove = activeTasks.find(task => task.id === taskId);
       if (taskToMove) {
-        const updatedTask = { ...taskToMove, status: newStatus as Task["status"], progress };
+        const updatedTask = { 
+          ...taskToMove, 
+          status: newStatus as Task["status"], 
+          progress 
+        };
         setActiveTasks(activeTasks.filter(task => task.id !== taskId));
         setCompletedTasks([...completedTasks, updatedTask]);
       }
@@ -57,7 +62,11 @@ const Tasks = () => {
       // Otherwise just update the status
       setActiveTasks(activeTasks.map(task => {
         if (task.id === taskId) {
-          return { ...task, status: newStatus as Task["status"], progress };
+          return { 
+            ...task, 
+            status: newStatus as Task["status"], 
+            progress 
+          };
         }
         return task;
       }));
@@ -68,7 +77,11 @@ const Tasks = () => {
   const handleReactivateTask = (taskId: string) => {
     const taskToMove = completedTasks.find(task => task.id === taskId);
     if (taskToMove) {
-      const updatedTask = { ...taskToMove, status: "In Progress", progress: 50 };
+      const updatedTask = { 
+        ...taskToMove, 
+        status: "In Progress" as Task["status"], 
+        progress: 50 
+      };
       setCompletedTasks(completedTasks.filter(task => task.id !== taskId));
       setActiveTasks([...activeTasks, updatedTask]);
     }

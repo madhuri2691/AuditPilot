@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Task } from "./TaskModel";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { FileExcel, Download, Upload } from "lucide-react";
+import { File, Download, Upload } from "lucide-react";
 
 interface ImportTasksExcelProps {
   onImport: (tasks: Task[]) => void;
@@ -124,7 +124,7 @@ export function ImportTasksExcel({ onImport }: ImportTasksExcelProps) {
           </Button>
         </div>
         <div className="border border-dashed border-gray-300 rounded-md p-6 text-center">
-          <FileExcel className="h-8 w-8 mx-auto text-gray-400" />
+          <File className="h-8 w-8 mx-auto text-gray-400" />
           <p className="mt-2 text-sm text-gray-500">
             Upload your Excel file with task details
           </p>
@@ -146,7 +146,7 @@ export function ImportTasksExcel({ onImport }: ImportTasksExcelProps) {
       {file && (
         <div className="flex justify-between items-center bg-muted p-2 rounded">
           <div className="flex items-center">
-            <FileExcel className="h-4 w-4 mr-2 text-green-500" />
+            <File className="h-4 w-4 mr-2 text-green-500" />
             <span className="text-sm">{file.name}</span>
           </div>
           <Button onClick={handleImport}>
