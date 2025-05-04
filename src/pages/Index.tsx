@@ -1,4 +1,3 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { useState, useEffect } from "react";
 import { Task } from "@/components/tasks/TaskModel";
 import { Client } from "@/components/clients/ClientsList";
 import { Link } from "react-router-dom";
-import { ArrowRight, CheckSquare, AlertCircle, Bell, BarChart } from "lucide-react";
+import { ArrowRight, CheckSquare, AlertCircle, Bell, BarChart, DollarSign } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -134,10 +133,10 @@ const sampleMilestones = [
   { 
     clientId: "1", 
     milestones: [
-      { name: "Planning", status: "completed", date: "2025-04-01" },
-      { name: "Fieldwork", status: "in-progress", date: "2025-04-15" },
-      { name: "Review", status: "pending", date: "2025-05-15" },
-      { name: "Reporting", status: "pending", date: "2025-06-01" }
+      { name: "Planning", status: "completed" as const, date: "2025-04-01" },
+      { name: "Fieldwork", status: "in-progress" as const, date: "2025-04-15" },
+      { name: "Review", status: "pending" as const, date: "2025-05-15" },
+      { name: "Reporting", status: "pending" as const, date: "2025-06-01" }
     ],
     teamAllocation: [
       { name: "Jane Doe", role: "Manager", hoursAllocated: 80, hoursUsed: 30 },
@@ -148,10 +147,10 @@ const sampleMilestones = [
   { 
     clientId: "2", 
     milestones: [
-      { name: "Planning", status: "completed", date: "2025-03-15" },
-      { name: "Fieldwork", status: "completed", date: "2025-04-01" },
-      { name: "Review", status: "in-progress", date: "2025-04-20" },
-      { name: "Reporting", status: "pending", date: "2025-05-10" }
+      { name: "Planning", status: "completed" as const, date: "2025-03-15" },
+      { name: "Fieldwork", status: "completed" as const, date: "2025-04-01" },
+      { name: "Review", status: "in-progress" as const, date: "2025-04-20" },
+      { name: "Reporting", status: "pending" as const, date: "2025-05-10" }
     ],
     teamAllocation: [
       { name: "Jane Doe", role: "Manager", hoursAllocated: 100, hoursUsed: 70 },
@@ -167,7 +166,7 @@ const sampleNotifications = [
     id: "1", 
     title: "Deadline Approaching", 
     message: "ABC Corporation audit fieldwork due in 3 days", 
-    type: "deadline", 
+    type: "deadline" as const, 
     date: "2025-04-12", 
     isRead: false 
   },
@@ -175,7 +174,7 @@ const sampleNotifications = [
     id: "2", 
     title: "Status Update", 
     message: "XYZ Industries moved to review phase", 
-    type: "update", 
+    type: "update" as const, 
     date: "2025-04-10", 
     isRead: true 
   },
@@ -183,19 +182,20 @@ const sampleNotifications = [
     id: "3", 
     title: "New Document", 
     message: "Tech Solutions uploaded financial statements", 
-    type: "document", 
+    type: "document" as const, 
     date: "2025-04-09", 
     isRead: false 
   }
 ];
 
-// Sample quick access tools
+// Sample quick access tools - updated to include Bill Tracking
 const quickAccessTools = [
   { name: "Document Generator", icon: "FileText", path: "/documents", description: "Generate standard documents" },
   { name: "Financial Analysis", icon: "BarChart", path: "/financial-analysis", description: "Analyze financial data" },
   { name: "Sampling Tool", icon: "Search", path: "/sampling", description: "Generate audit samples" },
   { name: "Task Manager", icon: "CheckSquare", path: "/tasks", description: "Manage audit tasks" },
-  { name: "Client Portal", icon: "Users", path: "/clients", description: "Access client information" }
+  { name: "Client Portal", icon: "Users", path: "/clients", description: "Access client information" },
+  { name: "Bill Tracking", icon: "DollarSign", path: "/bill-tracking", description: "Track invoices and payments" }
 ];
 
 const Index = () => {

@@ -8,7 +8,9 @@ import {
   Search, 
   CheckSquare, 
   Users,
-  ArrowRight
+  ArrowRight,
+  DollarSign,
+  CalendarClock
 } from "lucide-react";
 
 interface Tool {
@@ -31,6 +33,8 @@ export function QuickAccessTools({ tools }: QuickAccessToolsProps) {
       case "Search": return <Search size={24} />;
       case "CheckSquare": return <CheckSquare size={24} />;
       case "Users": return <Users size={24} />;
+      case "DollarSign": return <DollarSign size={24} />;
+      case "CalendarClock": return <CalendarClock size={24} />;
       default: return <FileText size={24} />;
     }
   };

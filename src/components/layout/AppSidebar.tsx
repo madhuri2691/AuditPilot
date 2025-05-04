@@ -1,4 +1,3 @@
-
 import { 
   Sidebar, 
   SidebarContent, 
@@ -20,7 +19,8 @@ import {
   Settings, 
   CheckSquare, 
   Database, 
-  Search
+  Search,
+  DollarSign
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -59,6 +59,11 @@ const menuItems = [
     title: "Sampling Tools",
     icon: Search,
     path: "/sampling"
+  },
+  {
+    title: "Bill Tracking",
+    icon: DollarSign,
+    path: "/bill-tracking"
   },
   {
     title: "Settings",
