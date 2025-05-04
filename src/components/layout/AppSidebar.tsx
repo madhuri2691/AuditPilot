@@ -1,3 +1,4 @@
+
 import { 
   Sidebar, 
   SidebarContent, 
@@ -20,7 +21,8 @@ import {
   CheckSquare, 
   Database, 
   Search,
-  DollarSign
+  DollarSign,
+  ClipboardCheck
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -39,6 +41,11 @@ const menuItems = [
     title: "Tasks",
     icon: CheckSquare,
     path: "/tasks"
+  },
+  {
+    title: "Audit Performance",
+    icon: ClipboardCheck,
+    path: "/audit-performance"
   },
   {
     title: "Documents",
