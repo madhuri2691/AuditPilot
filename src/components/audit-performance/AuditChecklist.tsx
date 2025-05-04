@@ -35,16 +35,21 @@ export function AuditChecklist({
   
   // Initialize checklist based on type or load existing
   useEffect(() => {
-    if (existingChecklist) {
+    if (existingChecklist && existingChecklist.items.length > 0) {
       setChecklist(existingChecklist.items);
       setAssessmentYear(existingChecklist.assessmentYear || "");
       setFinancialYear(existingChecklist.financialYear || "");
     } else {
+      console.log(`Generating ${type} checklist items`);
       // Generate default checklist based on type
       if (type === "Tax Audit") {
-        setChecklist(generateTaxAuditItems());
+        const items = generateTaxAuditItems();
+        console.log(`Generated ${items.length} tax audit items`);
+        setChecklist(items);
       } else {
-        setChecklist(generateStatutoryAuditItems());
+        const items = generateStatutoryAuditItems();
+        console.log(`Generated ${items.length} statutory audit items`);
+        setChecklist(items);
       }
     }
   }, [existingChecklist, type]);
@@ -111,6 +116,14 @@ export function AuditChecklist({
     // You would use a library like xlsx or docx to generate and download the file
     console.log(`Downloading ${type} checklist for ${clientName} as ${format}`);
   };
+
+  if (checklist.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p>Loading checklist items...</p>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-4">
@@ -148,7 +161,7 @@ export function AuditChecklist({
         <span className="text-sm font-medium">{completionPercentage}%</span>
       </div>
       
-      <div className="border rounded-md">
+      <div className="border rounded-md overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
