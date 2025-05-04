@@ -188,14 +188,15 @@ const sampleNotifications = [
   }
 ];
 
-// Sample quick access tools - updated to include Bill Tracking
+// Sample quick access tools - updated to include Audit Performance
 const quickAccessTools = [
   { name: "Document Generator", icon: "FileText", path: "/documents", description: "Generate standard documents" },
   { name: "Financial Analysis", icon: "BarChart", path: "/financial-analysis", description: "Analyze financial data" },
   { name: "Sampling Tool", icon: "Search", path: "/sampling", description: "Generate audit samples" },
   { name: "Task Manager", icon: "CheckSquare", path: "/tasks", description: "Manage audit tasks" },
   { name: "Client Portal", icon: "Users", path: "/clients", description: "Access client information" },
-  { name: "Bill Tracking", icon: "DollarSign", path: "/bill-tracking", description: "Track invoices and payments" }
+  { name: "Bill Tracking", icon: "DollarSign", path: "/bill-tracking", description: "Track invoices and payments" },
+  { name: "Audit Performance", icon: "ClipboardCheck", path: "/audit-performance", description: "Monitor audit progress with checklists" }
 ];
 
 const Index = () => {

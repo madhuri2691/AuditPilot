@@ -10,7 +10,8 @@ import {
   Users,
   ArrowRight,
   DollarSign,
-  CalendarClock
+  CalendarClock,
+  ClipboardCheck
 } from "lucide-react";
 
 interface Tool {
@@ -35,6 +36,7 @@ export function QuickAccessTools({ tools }: QuickAccessToolsProps) {
       case "Users": return <Users size={24} />;
       case "DollarSign": return <DollarSign size={24} />;
       case "CalendarClock": return <CalendarClock size={24} />;
+      case "ClipboardCheck": return <ClipboardCheck size={24} />;
       default: return <FileText size={24} />;
     }
   };
