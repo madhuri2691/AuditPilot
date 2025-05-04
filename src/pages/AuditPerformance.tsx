@@ -4,7 +4,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuditChecklist } from "@/components/audit-performance/AuditChecklist";
-import { AuditChecklist as AuditChecklistType } from "@/components/audit-performance/AuditChecklistModel";
+import { type AuditChecklist as AuditChecklistType } from "@/components/audit-performance/AuditChecklistModel";
 import { Task } from "@/components/tasks/TaskModel";
 import { toast } from "sonner";
 

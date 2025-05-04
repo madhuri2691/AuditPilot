@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Download, Save } from "lucide-react";
-import { AuditChecklist, ChecklistItem } from "./AuditChecklistModel";
+import { type AuditChecklist as AuditChecklistType, ChecklistItem } from "./AuditChecklistModel";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { generateTaxAuditItems, generateStatutoryAuditItems } from "./AuditChecklistTemplates";
@@ -16,8 +16,8 @@ interface AuditChecklistProps {
   taskName: string;
   clientName: string;
   type: "Tax Audit" | "Statutory Audit";
-  onSave?: (checklist: AuditChecklist) => void;
-  existingChecklist?: AuditChecklist;
+  onSave?: (checklist: AuditChecklistType) => void;
+  existingChecklist?: AuditChecklistType;
 }
 
 export function AuditChecklist({
@@ -83,7 +83,7 @@ export function AuditChecklist({
       return;
     }
     
-    const auditChecklist: AuditChecklist = {
+    const auditChecklist: AuditChecklistType = {
       id: existingChecklist?.id || `checklist_${Date.now()}`,
       taskId,
       taskName,
