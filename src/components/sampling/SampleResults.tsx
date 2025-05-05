@@ -124,7 +124,7 @@ export function SampleResults({
       // Create the samples worksheet
       const samplesWs = XLSX.utils.aoa_to_sheet([headers, ...samplesData]);
       
-      // Set column widths - Fix: converting string widths to numbers
+      // Set column widths - Fixed: converting string widths to numbers
       samplesWs['!cols'] = [
         { wch: 15 }, // ID
         { wch: 12 }, // Date
@@ -171,7 +171,7 @@ export function SampleResults({
       
       const templateWs = XLSX.utils.aoa_to_sheet([templateHeaders, ...templateData]);
       
-      // Set column widths - Fix: converting string widths to numbers
+      // Set column widths - Fixed: converting string widths to numbers
       templateWs['!cols'] = [
         { wch: 5 },  // #
         { wch: 15 }, // ID
