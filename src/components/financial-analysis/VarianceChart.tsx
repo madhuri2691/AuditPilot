@@ -32,7 +32,9 @@ export function VarianceChart({ data }: VarianceChartProps) {
         ? item.accountDescription.slice(0, 15) + '...' 
         : item.accountDescription,
       percentage: item.variancePercentage,
-      accountCode: item.accountCode
+      accountCode: item.accountCode,
+      // Add a color property based on the percentage value
+      color: item.variancePercentage >= 0 ? "#22c55e" : "#ef4444"
     }));
 
   // Format currency for the tooltip
@@ -132,9 +134,8 @@ export function VarianceChart({ data }: VarianceChartProps) {
                 <Bar 
                   dataKey="percentage" 
                   name="Variance %" 
-                  fill="#4f46e5" 
-                  // Set bar fill color based on positive/negative values
-                  fill={(entry) => entry.percentage >= 0 ? "#22c55e" : "#ef4444"}
+                  fill="#4f46e5"
+                  fillOpacity={0.8} 
                 />
               </BarChart>
             </ResponsiveContainer>

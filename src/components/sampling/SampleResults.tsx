@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileExcel, FileText } from "lucide-react";
+import { Download, FileText } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from 'xlsx';
 import { TransactionItem, SamplingModuleType } from "./SamplingTool";
@@ -232,7 +231,7 @@ export function SampleResults({
           <div className="flex justify-between items-center">
             <p className="text-sm text-muted-foreground">Download Options</p>
             <Button size="sm" onClick={downloadExcel} className="gap-2">
-              <FileExcel size={16} />
+              <FileText size={16} />
               Download Control Sheet
             </Button>
           </div>

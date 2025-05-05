@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileExcel, FilePdf, BarChart } from "lucide-react";
+import { Download, FileText, BarChart } from "lucide-react";
 import { TrialBalanceItem } from "@/pages/FinancialAnalysis";
 import { toast } from "sonner";
 import { VarianceChart } from "./VarianceChart";
@@ -232,11 +232,11 @@ export function TrialBalanceAnalysis({
               <CardTitle>Trial Balance Comparison</CardTitle>
               <div className="flex gap-2">
                 <Button variant="outline" onClick={handleExportToExcel} className="gap-2">
-                  <FileExcel size={16} />
+                  <FileText size={16} />
                   Export to Excel
                 </Button>
                 <Button variant="outline" onClick={handleExportToPdf} className="gap-2">
-                  <FilePdf size={16} />
+                  <FileText size={16} />
                   Export to PDF
                 </Button>
               </div>

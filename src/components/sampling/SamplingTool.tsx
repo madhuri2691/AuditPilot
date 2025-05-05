@@ -24,10 +24,6 @@ export interface TransactionItem {
 
 export type SamplingModuleType = "purchase" | "sales" | "expense";
 
-interface SamplingToolProps {
-  moduleType: SamplingModuleType;
-}
-
 // Define sampling method types
 export type SamplingMethod = "systematic" | "stratified" | "random" | "risk-based";
 
