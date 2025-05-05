@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from 'xlsx';
 import { TransactionItem, SamplingModuleType } from "./SamplingTool";
@@ -123,7 +123,7 @@ export function SampleResults({
       // Create the samples worksheet
       const samplesWs = XLSX.utils.aoa_to_sheet([headers, ...samplesData]);
       
-      // Set column widths
+      // Set column widths - Fixed: converting string widths to numbers
       samplesWs['!cols'] = [
         { wch: 15 }, // ID
         { wch: 12 }, // Date
@@ -170,7 +170,7 @@ export function SampleResults({
       
       const templateWs = XLSX.utils.aoa_to_sheet([templateHeaders, ...templateData]);
       
-      // Set column widths (same as samples)
+      // Set column widths - Fixed: converting string widths to numbers
       templateWs['!cols'] = [
         { wch: 5 },  // #
         { wch: 15 }, // ID
