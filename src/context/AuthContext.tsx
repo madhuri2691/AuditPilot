@@ -1,5 +1,6 @@
+
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 import { toast } from "sonner";
@@ -25,9 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // FIRST set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      (event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
         
         if (event === 'SIGNED_OUT') {
           // Handle sign out
@@ -40,15 +41,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
       setIsLoading(false);
       
       // Initial redirect if needed
-      if (session && location.pathname === '/auth') {
+      if (currentSession && location.pathname === '/auth') {
         navigate('/');
-      } else if (!session && location.pathname !== '/auth' && !location.pathname.startsWith('/auth')) {
+      } else if (!currentSession && location.pathname !== '/auth' && !location.pathname.startsWith('/auth')) {
         navigate('/auth');
       }
     });

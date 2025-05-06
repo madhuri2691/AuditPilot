@@ -2,188 +2,180 @@
 import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuditChecklist } from "@/components/audit-performance/AuditChecklist";
-import { type AuditChecklist as AuditChecklistType } from "@/components/audit-performance/AuditChecklistModel";
-import { Task } from "@/components/tasks/TaskModel";
+import { taxAuditChecklistItems, statutoryAuditChecklistItems } from "@/components/audit-performance/AuditChecklistTemplates";
+import { getTasks } from "@/services/taskService";
+import { 
+  getAuditChecklists, 
+  getChecklistItems, 
+  createAuditChecklist, 
+  updateChecklistItem 
+} from "@/services/auditChecklistService";
 import { toast } from "sonner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-
-// Sample tasks data for demonstration
-const sampleTasks: Task[] = [
-  {
-    id: "1",
-    name: "Financial Statement Analysis",
-    client: "ABC Corporation",
-    assignee: "Jane Doe",
-    status: "In Progress",
-    progress: 60,
-    deadline: "2025-06-15",
-    typeOfService: "Statutory Audit",
-    description: "Annual financial statement audit"
-  },
-  {
-    id: "2",
-    name: "Tax Compliance Review",
-    client: "XYZ Industries",
-    assignee: "John Smith",
-    status: "Not Started",
-    progress: 0,
-    deadline: "2025-05-30",
-    typeOfService: "Tax Audit",
-    description: "Quarterly tax compliance check"
-  },
-  {
-    id: "3",
-    name: "Internal Control Assessment",
-    client: "Global Services Inc",
-    assignee: "Robert Johnson",
-    status: "Review",
-    progress: 90,
-    deadline: "2025-05-10",
-    typeOfService: "Internal Audit",
-    description: "Assessment of internal controls"
-  }
-];
-
-// Sample saved checklists for demonstration
-const sampleSavedChecklists: AuditChecklistType[] = [
-  {
-    id: "checklist_1",
-    taskId: "1",
-    taskName: "Financial Statement Analysis",
-    clientName: "ABC Corporation",
-    type: "Statutory Audit",
-    items: [],
-    startDate: "2025-04-01",
-    financialYear: "2024-25"
-  }
-];
 
 const AuditPerformance = () => {
-  const [selectedTaskId, setSelectedTaskId] = useState<string>("");
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [auditType, setAuditType] = useState<"Tax Audit" | "Statutory Audit">("Statutory Audit");
-  const [savedChecklists, setSavedChecklists] = useState<AuditChecklistType[]>(sampleSavedChecklists);
-  const [currentChecklist, setCurrentChecklist] = useState<AuditChecklistType | undefined>(undefined);
+  const [selectedTask, setSelectedTask] = useState<string>("");
+  const [tasks, setTasks] = useState<any[]>([]);
+  const [checklistType, setChecklistType] = useState<"tax" | "statutory">("tax");
+  const [checklist, setChecklist] = useState<any>(null);
+  const [checklistItems, setChecklistItems] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Filter tasks that can have audit checklists (Tax or Statutory Audit)
-  const eligibleTasks = sampleTasks.filter(
-    task => task.typeOfService === "Tax Audit" || task.typeOfService === "Statutory Audit"
-  );
-  
-  // When a task is selected, set the selected task and check if there's a saved checklist
+  // Fetch tasks on component mount
   useEffect(() => {
-    if (!selectedTaskId) {
-      setSelectedTask(null);
-      setCurrentChecklist(undefined);
-      return;
-    }
-    
-    const task = sampleTasks.find(t => t.id === selectedTaskId);
-    if (task) {
-      setSelectedTask(task);
-      
-      // Determine audit type based on the task's service type
-      if (task.typeOfService === "Tax Audit") {
-        setAuditType("Tax Audit");
-      } else {
-        setAuditType("Statutory Audit");
+    const fetchTasks = async () => {
+      try {
+        const tasksData = await getTasks();
+        setTasks(tasksData);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        toast.error("Failed to load tasks");
+      } finally {
+        setIsLoading(false);
       }
-      
-      // Check if there's a saved checklist for this task
-      const existingChecklist = savedChecklists.find(c => c.taskId === selectedTaskId);
-      setCurrentChecklist(existingChecklist);
-    }
-  }, [selectedTaskId, savedChecklists]);
+    };
+    
+    fetchTasks();
+  }, []);
   
-  // Handle saving a checklist
-  const handleSaveChecklist = (checklist: AuditChecklistType) => {
-    setSavedChecklists(prev => {
-      // Replace the existing checklist or add a new one
-      const index = prev.findIndex(c => c.taskId === checklist.taskId);
-      if (index >= 0) {
-        const updated = [...prev];
-        updated[index] = checklist;
-        return updated;
-      } else {
-        return [...prev, checklist];
+  // Fetch or create checklist when task and type are selected
+  useEffect(() => {
+    if (!selectedTask) return;
+    
+    const fetchOrCreateChecklist = async () => {
+      setIsLoading(true);
+      try {
+        // Check if a checklist already exists for this task and type
+        const checklists = await getAuditChecklists(selectedTask);
+        const existingChecklist = checklists.find(cl => cl.type === checklistType);
+        
+        if (existingChecklist) {
+          setChecklist(existingChecklist);
+          
+          // Fetch checklist items
+          const items = await getChecklistItems(existingChecklist.id);
+          setChecklistItems(items);
+        } else {
+          // Create a new checklist
+          const templateItems = checklistType === "tax" 
+            ? taxAuditChecklistItems 
+            : statutoryAuditChecklistItems;
+          
+          const newChecklist = await createAuditChecklist({
+            task_id: selectedTask,
+            type: checklistType,
+            items: templateItems.map(item => ({
+              area: item.area,
+              procedure: item.procedure,
+              responsibility: item.responsibility,
+              timeline: item.timeline,
+              is_done: false,
+              checklist_id: "" // This will be set properly in the backend
+            }))
+          });
+          
+          setChecklist(newChecklist);
+          
+          // Fetch the newly created checklist items
+          const items = await getChecklistItems(newChecklist.id);
+          setChecklistItems(items);
+        }
+      } catch (error) {
+        console.error("Error fetching or creating checklist:", error);
+        toast.error("Failed to load audit checklist");
+      } finally {
+        setIsLoading(false);
       }
-    });
+    };
     
-    // Update the selected task's progress based on checklist completion
-    const completedItems = checklist.items.filter(item => item.isDone).length;
-    const progress = Math.round((completedItems / checklist.items.length) * 100);
-    
-    // In a real app, you would update the task in the database
-    console.log(`Task ${checklist.taskId} progress updated to ${progress}%`);
-    toast.success("Checklist saved and task progress updated");
+    fetchOrCreateChecklist();
+  }, [selectedTask, checklistType]);
+  
+  // Handle task item status update
+  const handleItemStatusChange = async (itemId: string, isDone: boolean, remarks?: string) => {
+    try {
+      await updateChecklistItem(itemId, { is_done: isDone, remarks });
+      
+      // Update local state
+      setChecklistItems(checklistItems.map(item => {
+        if (item.id === itemId) {
+          return { ...item, is_done: isDone, remarks: remarks || item.remarks };
+        }
+        return item;
+      }));
+      
+      toast.success("Checklist item updated");
+    } catch (error) {
+      console.error("Error updating checklist item:", error);
+      toast.error("Failed to update checklist item");
+    }
   };
-  
+
   return (
     <MainLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-audit-primary">Audit Performance and Monitoring</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-audit-primary">Audit Performance</h1>
         </div>
-        
+
         <Card>
           <CardHeader>
-            <CardTitle>Audit Checklist</CardTitle>
+            <CardTitle>Audit Checklists</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Select Task</label>
-                  <Select
-                    value={selectedTaskId}
-                    onValueChange={setSelectedTaskId}
+                  <label className="block mb-2 text-sm font-medium">Select Task</label>
+                  <Select 
+                    value={selectedTask} 
+                    onValueChange={setSelectedTask}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a task" />
                     </SelectTrigger>
                     <SelectContent>
-                      {eligibleTasks.map(task => (
+                      {tasks.map(task => (
                         <SelectItem key={task.id} value={task.id}>
-                          {task.name} - {task.client} ({task.typeOfService})
+                          {task.name} - {task.client}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium mb-1">Audit Type</label>
-                  <Select
-                    value={auditType}
-                    onValueChange={(value: "Tax Audit" | "Statutory Audit") => setAuditType(value)}
-                    disabled={!!selectedTask}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Tax Audit">Tax Audit</SelectItem>
-                      <SelectItem value="Statutory Audit">Statutory Audit</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
-              
-              {selectedTask ? (
-                <AuditChecklist
-                  taskId={selectedTask.id}
-                  taskName={selectedTask.name}
-                  clientName={selectedTask.client}
-                  type={auditType}
-                  onSave={handleSaveChecklist}
-                  existingChecklist={currentChecklist}
-                />
-              ) : (
-                <div className="text-center py-10 text-muted-foreground">
-                  Please select a task to view or create an audit checklist
-                </div>
+
+              {selectedTask && (
+                <Tabs value={checklistType} onValueChange={(val) => setChecklistType(val as "tax" | "statutory")}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="tax">Tax Audit</TabsTrigger>
+                    <TabsTrigger value="statutory">Statutory Audit</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="tax">
+                    {isLoading ? (
+                      <div className="text-center py-8">Loading tax audit checklist...</div>
+                    ) : (
+                      <AuditChecklist 
+                        items={checklistItems} 
+                        onItemStatusChange={handleItemStatusChange} 
+                      />
+                    )}
+                  </TabsContent>
+                  
+                  <TabsContent value="statutory">
+                    {isLoading ? (
+                      <div className="text-center py-8">Loading statutory audit checklist...</div>
+                    ) : (
+                      <AuditChecklist 
+                        items={checklistItems} 
+                        onItemStatusChange={handleItemStatusChange} 
+                      />
+                    )}
+                  </TabsContent>
+                </Tabs>
               )}
             </div>
           </CardContent>

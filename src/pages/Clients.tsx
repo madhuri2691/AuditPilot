@@ -1,85 +1,69 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search, Filter, Plus, Upload } from "lucide-react";
-import { ClientsList, Client } from "@/components/clients/ClientsList";
+import { ClientsList } from "@/components/clients/ClientsListWrapper";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader } from "@/components/ui/dialog";
 import { AddClientForm } from "@/components/clients/AddClientForm";
 import { ImportClientsExcel } from "@/components/clients/ImportClientsExcel";
 import { ExportClients } from "@/components/clients/ExportClients";
 import { toast } from "sonner";
-
-// Sample client data - in a real app, this would come from a database
-const initialClients: Client[] = [
-  {
-    id: "1",
-    name: "ABC Corporation",
-    industry: "Manufacturing",
-    status: "Active",
-    risk: "Medium",
-    fiscalYearEnd: "Dec 31",
-    contactPerson: "John Smith"
-  },
-  {
-    id: "2",
-    name: "XYZ Industries",
-    industry: "Technology",
-    status: "Active",
-    risk: "High",
-    fiscalYearEnd: "Jun 30",
-    contactPerson: "Jane Doe"
-  },
-  {
-    id: "3",
-    name: "Acme Ltd",
-    industry: "Retail",
-    status: "Completed",
-    risk: "Low",
-    fiscalYearEnd: "Mar 31",
-    contactPerson: "Robert Johnson"
-  },
-  {
-    id: "4",
-    name: "Global Services Inc",
-    industry: "Services",
-    status: "Active",
-    risk: "Medium",
-    fiscalYearEnd: "Dec 31",
-    contactPerson: "Sarah Williams"
-  },
-  {
-    id: "5",
-    name: "Tech Solutions",
-    industry: "Technology",
-    status: "On Hold",
-    risk: "High",
-    fiscalYearEnd: "Jun 30",
-    contactPerson: "Mike Brown"
-  }
-];
+import { getClients, addClient, Client } from "@/services/clientService";
 
 const Clients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  const handleAddClient = (data: any) => {
-    const newClient = {
-      id: crypto.randomUUID(),
-      ...data,
-    };
-    
-    setClients((prev) => [...prev, newClient]);
-    toast.success("Client added successfully");
-    setAddDialogOpen(false);
+  // Fetch clients on component mount
+  const fetchClients = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getClients();
+      setClients(data);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      toast.error("Failed to load clients");
+    } finally {
+      setIsLoading(false);
+    }
   };
   
-  const handleImportClients = (importedClients: Partial<Client>[]) => {
-    setClients((prev) => [...prev, ...importedClients as Client[]]);
-    setImportDialogOpen(false);
+  useEffect(() => {
+    fetchClients();
+  }, []);
+  
+  const handleAddClient = async (data: any) => {
+    try {
+      const newClient = await addClient(data);
+      setClients((prev) => [newClient, ...prev]);
+      setAddDialogOpen(false);
+    } catch (error) {
+      console.error("Error adding client:", error);
+    }
+  };
+  
+  const handleImportClients = async (importedClients: Partial<Client>[]) => {
+    try {
+      const promises = importedClients.map(client => addClient(client as Client));
+      const results = await Promise.allSettled(promises);
+      
+      const successCount = results.filter(r => r.status === 'fulfilled').length;
+      
+      toast.success(`Successfully imported ${successCount} of ${importedClients.length} clients`);
+      
+      // Refresh client list
+      fetchClients();
+      
+      setImportDialogOpen(false);
+    } catch (error) {
+      console.error("Error importing clients:", error);
+      toast.error("Failed to import clients");
+    }
   };
 
   return (
@@ -148,7 +132,12 @@ const Clients = () => {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <ClientsList />
+            <ClientsList 
+              clients={clients} 
+              isLoading={isLoading} 
+              searchTerm={searchTerm}
+              onRefreshClients={fetchClients}
+            />
           </CardContent>
         </Card>
       </div>

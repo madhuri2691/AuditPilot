@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,8 @@ import { TasksList } from "@/components/tasks/TasksList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskForm } from "@/components/tasks/TaskForm";
 import { ImportTasksExcel } from "@/components/tasks/ImportTasksExcel";
-import { Task } from "@/components/tasks/TaskModel";
+import { getTasks, addTask, updateTask, Task } from "@/services/taskService";
+import { getClients } from "@/services/clientService";
 
 // Sample client data - in a real app, this would come from an API or state
 const sampleClients = [
@@ -25,79 +25,142 @@ const Tasks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("active");
   const [addTab, setAddTab] = useState("manual");
+  const [clients, setClients] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Function to handle adding a new task (from form or import)
-  const handleAddTask = (task: Task) => {
-    if (task.status === "Complete") {
-      setCompletedTasks([...completedTasks, task]);
-    } else {
-      setActiveTasks([...activeTasks, task]);
+  // Fetch tasks and clients on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const tasksData = await getTasks();
+        const clientsData = await getClients();
+        
+        // Transform clients data for the dropdown
+        const formattedClients = clientsData.map(client => ({
+          id: client.id,
+          name: client.name
+        }));
+        
+        setClients(formattedClients);
+        
+        // Split tasks into active and completed
+        const active = tasksData.filter(task => task.status !== 'Complete');
+        const completed = tasksData.filter(task => task.status === 'Complete');
+        
+        setActiveTasks(active);
+        setCompletedTasks(completed);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  // Function to handle adding a new task
+  const handleAddTask = async (task: Task) => {
+    try {
+      const newTask = await addTask(task);
+      
+      if (newTask.status === "Complete") {
+        setCompletedTasks([newTask, ...completedTasks]);
+      } else {
+        setActiveTasks([newTask, ...activeTasks]);
+      }
+      
+      return newTask;
+    } catch (error) {
+      console.error("Error adding task:", error);
+      throw error;
     }
   };
 
   // Function to handle adding multiple tasks (from import)
-  const handleImportTasks = (tasks: Task[]) => {
-    const newActiveTasks = tasks.filter(task => task.status !== "Complete");
-    const newCompletedTasks = tasks.filter(task => task.status === "Complete");
-    
-    setActiveTasks([...activeTasks, ...newActiveTasks]);
-    setCompletedTasks([...completedTasks, ...newCompletedTasks]);
+  const handleImportTasks = async (tasks: Task[]) => {
+    try {
+      const promises = tasks.map(task => addTask(task));
+      await Promise.allSettled(promises);
+      
+      // Refresh task lists
+      const tasksData = await getTasks();
+      const active = tasksData.filter(task => task.status !== 'Complete');
+      const completed = tasksData.filter(task => task.status === 'Complete');
+      
+      setActiveTasks(active);
+      setCompletedTasks(completed);
+    } catch (error) {
+      console.error("Error importing tasks:", error);
+    }
   };
 
   // Function to handle updating task status
-  const handleUpdateTaskStatus = (taskId: string, newStatus: string, progress: number) => {
-    // If task is marked as complete, move to completed list
-    if (newStatus === "Complete") {
-      const taskToMove = activeTasks.find(task => task.id === taskId);
-      if (taskToMove) {
-        const updatedTask = { 
-          ...taskToMove, 
-          status: newStatus as Task["status"], 
-          progress 
-        };
+  const handleUpdateTaskStatus = async (taskId: string, newStatus: string, progress: number) => {
+    try {
+      const taskToUpdate = activeTasks.find(task => task.id === taskId) || 
+                          completedTasks.find(task => task.id === taskId);
+      
+      if (!taskToUpdate) return;
+      
+      const updatedTask = await updateTask(taskId, { 
+        status: newStatus as Task["status"],
+        progress 
+      });
+      
+      // If task is marked as complete, move to completed list
+      if (newStatus === "Complete") {
         setActiveTasks(activeTasks.filter(task => task.id !== taskId));
-        setCompletedTasks([...completedTasks, updatedTask]);
+        setCompletedTasks([updatedTask, ...completedTasks]);
+      } else {
+        // Otherwise just update the status
+        setActiveTasks(activeTasks.map(task => {
+          if (task.id === taskId) {
+            return { 
+              ...task, 
+              status: newStatus as Task["status"], 
+              progress 
+            };
+          }
+          return task;
+        }));
       }
-    } else {
-      // Otherwise just update the status
-      setActiveTasks(activeTasks.map(task => {
-        if (task.id === taskId) {
-          return { 
-            ...task, 
-            status: newStatus as Task["status"], 
-            progress 
-          };
-        }
-        return task;
-      }));
+    } catch (error) {
+      console.error("Error updating task:", error);
     }
   };
 
   // Function to move a completed task back to active
-  const handleReactivateTask = (taskId: string) => {
-    const taskToMove = completedTasks.find(task => task.id === taskId);
-    if (taskToMove) {
-      const updatedTask = { 
-        ...taskToMove, 
+  const handleReactivateTask = async (taskId: string) => {
+    try {
+      const taskToMove = completedTasks.find(task => task.id === taskId);
+      
+      if (!taskToMove) return;
+      
+      const updatedTask = await updateTask(taskId, { 
         status: "In Progress" as Task["status"], 
         progress: 50 
-      };
+      });
+      
       setCompletedTasks(completedTasks.filter(task => task.id !== taskId));
-      setActiveTasks([...activeTasks, updatedTask]);
+      setActiveTasks([updatedTask, ...activeTasks]);
+    } catch (error) {
+      console.error("Error reactivating task:", error);
     }
   };
 
   // Filter tasks based on search query
   const filteredActiveTasks = activeTasks.filter(task =>
     task.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.assignee.toLowerCase().includes(searchQuery.toLowerCase())
+    (task.client && task.client.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (task.assignee && task.assignee.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const filteredCompletedTasks = completedTasks.filter(task =>
     task.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    task.assignee.toLowerCase().includes(searchQuery.toLowerCase())
+    (task.client && task.client.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (task.assignee && task.assignee.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -130,7 +193,7 @@ const Tasks = () => {
                 <TabsTrigger value="import">Import from Excel</TabsTrigger>
               </TabsList>
               <TabsContent value="manual">
-                <TaskForm onSubmit={handleAddTask} clients={sampleClients} />
+                <TaskForm onSubmit={handleAddTask} clients={clients} />
               </TabsContent>
               <TabsContent value="import">
                 <ImportTasksExcel onImport={handleImportTasks} />
@@ -168,18 +231,26 @@ const Tasks = () => {
                 <TabsTrigger value="completed">Completed Tasks</TabsTrigger>
               </TabsList>
               <TabsContent value="active">
-                <TasksList 
-                  tasks={filteredActiveTasks} 
-                  onUpdateStatus={handleUpdateTaskStatus} 
-                  showInvoice={false}
-                />
+                {isLoading ? (
+                  <div className="text-center py-4">Loading tasks...</div>
+                ) : (
+                  <TasksList 
+                    tasks={filteredActiveTasks} 
+                    onUpdateStatus={handleUpdateTaskStatus} 
+                    showInvoice={false}
+                  />
+                )}
               </TabsContent>
               <TabsContent value="completed">
-                <TasksList 
-                  tasks={filteredCompletedTasks} 
-                  onUpdateStatus={handleReactivateTask} 
-                  showInvoice={true}
-                />
+                {isLoading ? (
+                  <div className="text-center py-4">Loading tasks...</div>
+                ) : (
+                  <TasksList 
+                    tasks={filteredCompletedTasks} 
+                    onUpdateStatus={handleReactivateTask} 
+                    showInvoice={true}
+                  />
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>
