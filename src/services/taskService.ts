@@ -84,7 +84,7 @@ export const addTask = async (task: Task): Promise<TaskDB> => {
       
       if (!clientError && clientData) {
         // Create a new object with the client property
-        const taskWithClient = {
+        const taskWithClient: TaskDB = {
           ...data,
           client: clientData.name,
           assignee: task.assignee || '' // Include the assignee from the incoming task
@@ -101,7 +101,7 @@ export const addTask = async (task: Task): Promise<TaskDB> => {
       ...data, 
       client: '',
       assignee: task.assignee || '' // Include the assignee from the incoming task
-    };
+    } as TaskDB;
   } catch (error: any) {
     console.error('Error adding task:', error);
     toast.error('Failed to add task');
@@ -130,11 +130,11 @@ export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<
         .single();
       
       if (!clientError && clientData) {
-        // Create a new object with the client property
-        const taskWithClient = {
+        // Create a new object with the client property and treat it as TaskDB
+        const taskWithClient: TaskDB = {
           ...data,
           client: clientData.name,
-          assignee: updates.assignee || data.assignee || '' // Preserve assignee from updates or existing data
+          assignee: updates.assignee || '' // Preserve assignee from updates
         };
         
         toast.success('Task updated successfully');
@@ -147,8 +147,8 @@ export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<
     return { 
       ...data, 
       client: '',
-      assignee: updates.assignee || data.assignee || '' // Preserve assignee from updates or existing data
-    };
+      assignee: updates.assignee || '' // Preserve assignee from updates
+    } as TaskDB;
   } catch (error: any) {
     console.error('Error updating task:', error);
     toast.error('Failed to update task');
