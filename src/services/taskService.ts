@@ -17,8 +17,9 @@ export interface TaskDB {
   description?: string;
   created_at?: string;
   updated_at?: string;
-  // Add this to store client name separately from the join
+  // Add these to store client name and assignee name separately from the join
   client?: string;
+  assignee?: string;
 }
 
 // Get all tasks
@@ -85,7 +86,8 @@ export const addTask = async (task: Task): Promise<TaskDB> => {
         // Create a new object with the client property
         const taskWithClient = {
           ...data,
-          client: clientData.name
+          client: clientData.name,
+          assignee: task.assignee || '' // Include the assignee from the incoming task
         };
         
         toast.success('Task added successfully');
@@ -95,7 +97,11 @@ export const addTask = async (task: Task): Promise<TaskDB> => {
     
     // If no client data was found, return the task without client name
     toast.success('Task added successfully');
-    return { ...data, client: '' };
+    return { 
+      ...data, 
+      client: '',
+      assignee: task.assignee || '' // Include the assignee from the incoming task
+    };
   } catch (error: any) {
     console.error('Error adding task:', error);
     toast.error('Failed to add task');
@@ -127,7 +133,8 @@ export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<
         // Create a new object with the client property
         const taskWithClient = {
           ...data,
-          client: clientData.name
+          client: clientData.name,
+          assignee: updates.assignee || data.assignee || '' // Preserve assignee from updates or existing data
         };
         
         toast.success('Task updated successfully');
@@ -137,7 +144,11 @@ export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<
     
     // If no client data was found, return the task without client name
     toast.success('Task updated successfully');
-    return { ...data, client: '' };
+    return { 
+      ...data, 
+      client: '',
+      assignee: updates.assignee || data.assignee || '' // Preserve assignee from updates or existing data
+    };
   } catch (error: any) {
     console.error('Error updating task:', error);
     toast.error('Failed to update task');
