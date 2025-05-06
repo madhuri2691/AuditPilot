@@ -291,3 +291,7 @@ export const generateStatutoryAuditItems = (): ChecklistItem[] => {
     }
   ];
 };
+
+// Export the arrays directly for components that need them
+export const taxAuditChecklistItems = generateTaxAuditItems();
+export const statutoryAuditChecklistItems = generateStatutoryAuditItems();

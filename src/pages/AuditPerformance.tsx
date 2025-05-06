@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AuditChecklist } from "@/components/audit-performance/AuditChecklist";
-import { taxAuditChecklistItems, statutoryAuditChecklistItems } from "@/components/audit-performance/AuditChecklistTemplates";
+import { generateTaxAuditItems, generateStatutoryAuditItems } from "@/components/audit-performance/AuditChecklistTemplates";
 import { getTasks } from "@/services/taskService";
 import { 
   getAuditChecklists, 
@@ -22,6 +22,7 @@ const AuditPerformance = () => {
   const [checklist, setChecklist] = useState<any>(null);
   const [checklistItems, setChecklistItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTaskDetails, setSelectedTaskDetails] = useState<any>(null);
   
   // Fetch tasks on component mount
   useEffect(() => {
@@ -39,6 +40,16 @@ const AuditPerformance = () => {
     
     fetchTasks();
   }, []);
+
+  // Update selected task details when task changes
+  useEffect(() => {
+    if (!selectedTask || tasks.length === 0) return;
+    
+    const taskDetails = tasks.find(task => task.id === selectedTask);
+    if (taskDetails) {
+      setSelectedTaskDetails(taskDetails);
+    }
+  }, [selectedTask, tasks]);
   
   // Fetch or create checklist when task and type are selected
   useEffect(() => {
@@ -60,8 +71,8 @@ const AuditPerformance = () => {
         } else {
           // Create a new checklist
           const templateItems = checklistType === "tax" 
-            ? taxAuditChecklistItems 
-            : statutoryAuditChecklistItems;
+            ? generateTaxAuditItems()
+            : generateStatutoryAuditItems();
           
           const newChecklist = await createAuditChecklist({
             task_id: selectedTask,
@@ -139,7 +150,7 @@ const AuditPerformance = () => {
                     <SelectContent>
                       {tasks.map(task => (
                         <SelectItem key={task.id} value={task.id}>
-                          {task.name} - {task.client}
+                          {task.name} - {task.client_name || "No client"}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -159,8 +170,33 @@ const AuditPerformance = () => {
                       <div className="text-center py-8">Loading tax audit checklist...</div>
                     ) : (
                       <AuditChecklist 
-                        items={checklistItems} 
-                        onItemStatusChange={handleItemStatusChange} 
+                        taskId={selectedTask}
+                        taskName={selectedTaskDetails?.name || ""}
+                        clientName={selectedTaskDetails?.client_name || "Unknown Client"}
+                        type="Tax Audit"
+                        existingChecklist={checklist ? {
+                          id: checklist.id,
+                          taskId: checklist.task_id,
+                          taskName: selectedTaskDetails?.name || "",
+                          clientName: selectedTaskDetails?.client_name || "Unknown Client",
+                          type: "Tax Audit",
+                          items: checklistItems.map(item => ({
+                            id: item.id,
+                            area: item.area,
+                            procedure: item.procedure,
+                            responsibility: item.responsibility || "",
+                            timeline: item.timeline || "",
+                            isDone: item.is_done || false,
+                            remarks: item.remarks || ""
+                          })),
+                          startDate: checklist.start_date || new Date().toISOString(),
+                          assessmentYear: checklist.assessment_year || "",
+                          financialYear: checklist.financial_year || ""
+                        } : undefined}
+                        onSave={(updatedChecklist) => {
+                          console.log("Saving checklist:", updatedChecklist);
+                          toast.success("Checklist saved successfully");
+                        }}
                       />
                     )}
                   </TabsContent>
@@ -170,8 +206,33 @@ const AuditPerformance = () => {
                       <div className="text-center py-8">Loading statutory audit checklist...</div>
                     ) : (
                       <AuditChecklist 
-                        items={checklistItems} 
-                        onItemStatusChange={handleItemStatusChange} 
+                        taskId={selectedTask}
+                        taskName={selectedTaskDetails?.name || ""}
+                        clientName={selectedTaskDetails?.client_name || "Unknown Client"}
+                        type="Statutory Audit"
+                        existingChecklist={checklist ? {
+                          id: checklist.id,
+                          taskId: checklist.task_id,
+                          taskName: selectedTaskDetails?.name || "",
+                          clientName: selectedTaskDetails?.client_name || "Unknown Client",
+                          type: "Statutory Audit",
+                          items: checklistItems.map(item => ({
+                            id: item.id,
+                            area: item.area,
+                            procedure: item.procedure,
+                            responsibility: item.responsibility || "",
+                            timeline: item.timeline || "",
+                            isDone: item.is_done || false,
+                            remarks: item.remarks || ""
+                          })),
+                          startDate: checklist.start_date || new Date().toISOString(),
+                          assessmentYear: checklist.assessment_year || "",
+                          financialYear: checklist.financial_year || ""
+                        } : undefined}
+                        onSave={(updatedChecklist) => {
+                          console.log("Saving checklist:", updatedChecklist);
+                          toast.success("Checklist saved successfully");
+                        }}
                       />
                     )}
                   </TabsContent>
