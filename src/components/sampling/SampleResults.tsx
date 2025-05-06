@@ -55,15 +55,13 @@ const SampleResults: React.FC<SampleResultsProps> = ({
 
       navigator.clipboard.writeText(sampleText);
 
-      toast({
-        title: "Copied to Clipboard",
-        description: "Sample data copied to clipboard.",
+      toast("Copied to Clipboard", {
+        description: "Sample data copied to clipboard."
       });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Copy Failed",
+      toast("Copy Failed", {
         description: "Failed to copy sample data to clipboard.",
+        variant: "destructive"
       });
     }
   };
@@ -144,16 +142,14 @@ const SampleResults: React.FC<SampleResultsProps> = ({
       // Save the workbook to a file
       XLSX.writeFile(wb, `${moduleType}_samples_${new Date().toISOString().split('T')[0]}.xlsx`);
       
-      toast({
-        title: "Export Successful",
-        description: "Samples and testing template downloaded as Excel file.",
+      toast("Export Successful", {
+        description: "Samples and testing template downloaded as Excel file."
       });
     } catch (error) {
       console.error("Error exporting to Excel:", error);
-      toast({
-        variant: "destructive",
-        title: "Export Failed",
+      toast("Export Failed", {
         description: "There was an error exporting the samples. Please try again.",
+        variant: "destructive"
       });
     }
   };

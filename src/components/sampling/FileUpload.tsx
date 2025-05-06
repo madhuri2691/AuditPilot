@@ -212,19 +212,23 @@ export function FileUpload({ moduleType, onDataUploaded, isLoading, setIsLoading
           id: row[columnMapping.id]?.toString() || `ROW-${index + 2}`,  // Fallback to row number if ID not available
           date: row[columnMapping.date]?.toString() || "",
           amount: parseFloat(row[columnMapping.amount]) || 0,
-          description: row[columnMapping.description]?.toString() || ""
+          description: row[columnMapping.description]?.toString() || "",
+          entity: "" // Add default empty entity that will be updated below
         };
         
-        // Add module-specific fields
+        // Add module-specific fields and set entity
         if (moduleType === "purchase") {
           item.vendor = row[columnMapping.vendor]?.toString() || "";
           item.invoiceNumber = row[columnMapping.invoiceNumber]?.toString() || "";
+          item.entity = item.vendor || "Unknown Vendor";
         } else if (moduleType === "sales") {
           item.customer = row[columnMapping.customer]?.toString() || "";
           item.invoiceNumber = row[columnMapping.invoiceNumber]?.toString() || "";
+          item.entity = item.customer || "Unknown Customer";
         } else if (moduleType === "expense") {
           item.category = row[columnMapping.category]?.toString() || "";
           item.paymentMethod = row[columnMapping.paymentMethod]?.toString() || "";
+          item.entity = row[columnMapping.vendor] || row[columnMapping.category] || "Unknown Entity";
         }
         
         return item;
