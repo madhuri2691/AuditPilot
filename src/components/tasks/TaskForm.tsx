@@ -95,10 +95,7 @@ export function TaskForm({ onSubmit, clients: initialClients }: TaskFormProps) {
     
     onSubmit(newTask);
     form.reset();
-    toast({
-      title: "Task created",
-      description: "Your task has been created successfully",
-    });
+    toast.success("Task created successfully");
   };
 
   return (
