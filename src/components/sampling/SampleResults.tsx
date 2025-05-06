@@ -59,9 +59,8 @@ const SampleResults: React.FC<SampleResultsProps> = ({
         description: "Sample data copied to clipboard."
       });
     } catch (error) {
-      toast("Copy Failed", {
-        description: "Failed to copy sample data to clipboard.",
-        variant: "destructive"
+      toast.error("Copy Failed", {
+        description: "Failed to copy sample data to clipboard."
       });
     }
   };
@@ -147,9 +146,8 @@ const SampleResults: React.FC<SampleResultsProps> = ({
       });
     } catch (error) {
       console.error("Error exporting to Excel:", error);
-      toast("Export Failed", {
-        description: "There was an error exporting the samples. Please try again.",
-        variant: "destructive"
+      toast.error("Export Failed", {
+        description: "There was an error exporting the samples. Please try again."
       });
     }
   };
