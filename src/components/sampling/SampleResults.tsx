@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -36,11 +37,22 @@ interface Sample {
 }
 
 interface SampleResultsProps {
-  sampleConfig: SampleConfig;
   samples: Sample[];
+  totalTransactions: number;
+  totalValue: number;
+  moduleType: string;
+  onResetConfig: () => void;
+  onFullReset: () => void;
 }
 
-const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) => {
+const SampleResults: React.FC<SampleResultsProps> = ({ 
+  samples, 
+  totalTransactions, 
+  totalValue,
+  moduleType,
+  onResetConfig,
+  onFullReset
+}) => {
 
   const handleCopyToClipboard = () => {
     try {
@@ -72,7 +84,7 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
         "ID", "Date", "Amount", "Vendor/Customer", "Description", "Test Result", "Notes"
       ];
       
-      const samplesData = samples.map((sample, index) => [
+      const samplesData = samples.map((sample) => [
         sample.id,
         sample.date,
         sample.amount,
@@ -85,7 +97,7 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
       // Create the samples worksheet
       const samplesWs = XLSX.utils.aoa_to_sheet([headers, ...samplesData]);
       
-      // Set column widths - Fixed: converting string widths to numbers
+      // Set column widths
       samplesWs['!cols'] = [
         { wch: 15 }, // ID
         { wch: 12 }, // Date
@@ -113,17 +125,17 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
       ];
       
       const templateData = testProcedures.map((proc, i) => [
-        i + 1, // Fixed: converting string to number for proper numbering
-        "", // ID to be filled by user
+        i + 1,
+        "",
         proc,
-        "", // Result to be filled
-        "", // Explanation to be filled
-        ""  // Workpaper ref to be filled
+        "",
+        "",
+        ""
       ]);
       
       const templateWs = XLSX.utils.aoa_to_sheet([templateHeaders, ...templateData]);
       
-      // Set column widths - Fixed: converting string widths to numbers
+      // Set column widths
       templateWs['!cols'] = [
         { wch: 5 },  // #
         { wch: 15 }, // ID
@@ -137,7 +149,7 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
       XLSX.utils.book_append_sheet(wb, templateWs, "Testing Template");
       
       // Save the workbook to a file
-      XLSX.writeFile(wb, `${sampleConfig.type}_samples_${new Date().toISOString().split('T')[0]}.xlsx`);
+      XLSX.writeFile(wb, `${moduleType}_samples_${new Date().toISOString().split('T')[0]}.xlsx`);
       
       toast({
         title: "Export Successful",
@@ -158,14 +170,33 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
       <CardHeader>
         <CardTitle>Sample Results</CardTitle>
         <CardDescription>
-          Review the generated samples for {sampleConfig.type}
+          Review the generated samples for {moduleType}
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="mb-4 flex justify-between items-center">
+          <div className="space-y-1">
+            <Badge variant="secondary" className="mb-2 mr-2">
+              Total Samples: {samples.length}
+            </Badge>
+            <Badge variant="outline" className="mb-2 mr-2">
+              Coverage: {((samples.length / totalTransactions) * 100).toFixed(2)}%
+            </Badge>
+          </div>
+          <div className="space-x-2">
+            <Button variant="outline" size="sm" onClick={onResetConfig}>
+              Change Parameters
+            </Button>
+            <Button variant="secondary" size="sm" onClick={onFullReset}>
+              Start Over
+            </Button>
+          </div>
+        </div>
+        
         {samples.length === 0 ? (
           <div className="text-center py-4">No samples generated.</div>
         ) : (
-          <ScrollArea>
+          <ScrollArea className="h-[400px]">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -191,20 +222,15 @@ const SampleResults: React.FC<SampleResultsProps> = ({ sampleConfig, samples }) 
           </ScrollArea>
         )}
       </CardContent>
-      <div className="flex justify-between p-4">
-        <Badge variant="secondary">
-          Total Samples: {samples.length}
-        </Badge>
-        <div>
-          <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
-            <Copy className="mr-2 h-4 w-4" />
-            Copy to Clipboard
-          </Button>
-          <Button size="sm" className="ml-2" onClick={handleDownloadExcel}>
-            <Download className="mr-2 h-4 w-4" />
-            Download Excel
-          </Button>
-        </div>
+      <div className="flex justify-end p-4">
+        <Button variant="outline" size="sm" onClick={handleCopyToClipboard} className="mr-2">
+          <Copy className="mr-2 h-4 w-4" />
+          Copy to Clipboard
+        </Button>
+        <Button size="sm" onClick={handleDownloadExcel}>
+          <Download className="mr-2 h-4 w-4" />
+          Download Excel
+        </Button>
       </div>
     </Card>
   );

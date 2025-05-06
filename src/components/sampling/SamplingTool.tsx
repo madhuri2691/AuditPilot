@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/sampling/FileUpload";
 import { SamplingConfig } from "@/components/sampling/SamplingConfig";
-import { SampleResults } from "@/components/sampling/SampleResults";
+import SampleResults from "@/components/sampling/SampleResults";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
