@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Copy, Download } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import * as XLSX from 'xlsx';
+import { TransactionItem } from "./SamplingTool";
 
 interface SampleConfig {
   type: string;
@@ -28,16 +29,8 @@ interface SampleConfig {
   // Add other configuration properties as needed
 }
 
-interface Sample {
-  id: string;
-  date: string;
-  amount: number;
-  entity: string;
-  description: string;
-}
-
 interface SampleResultsProps {
-  samples: Sample[];
+  samples: TransactionItem[];
   totalTransactions: number;
   totalValue: number;
   moduleType: string;

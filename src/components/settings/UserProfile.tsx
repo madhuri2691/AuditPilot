@@ -171,8 +171,16 @@ const UserProfile = () => {
 
   // Handle notification preferences submission
   const onSubmitNotifications = (values: z.infer<typeof notificationFormSchema>) => {
-    // In a real app, this would update notification preferences via API
-    setNotifications(values);
+    // Fix: Ensure all required properties are present when setting state
+    setNotifications({
+      emailNotifications: values.emailNotifications,
+      inAppNotifications: values.inAppNotifications,
+      taskReminders: values.taskReminders,
+      deadlineAlerts: values.deadlineAlerts,
+      clientActivity: values.clientActivity,
+      teamActivity: values.teamActivity,
+      marketingUpdates: values.marketingUpdates,
+    });
     
     toast({
       title: "Notification Preferences Updated",

@@ -20,6 +20,8 @@ export interface TransactionItem {
   invoiceNumber?: string;
   category?: string;
   paymentMethod?: string;
+  // Add entity to match Sample interface requirements
+  entity: string;
 }
 
 export type SamplingModuleType = "purchase" | "sales" | "expense";
@@ -40,7 +42,22 @@ export function SamplingTool({ moduleType }: SamplingToolProps) {
   
   // Handle data from file upload
   const handleDataUploaded = (data: TransactionItem[]) => {
-    setTransactionData(data);
+    // Make sure each transaction has an entity property
+    const processedData = data.map(item => {
+      // If entity is missing, use vendor or customer based on module type
+      if (!item.entity) {
+        if (moduleType === "purchase") {
+          item.entity = item.vendor || "Unknown Vendor";
+        } else if (moduleType === "sales") {
+          item.entity = item.customer || "Unknown Customer";
+        } else {
+          item.entity = item.vendor || item.customer || "Unknown Entity";
+        }
+      }
+      return item;
+    });
+    
+    setTransactionData(processedData);
     setUploadComplete(true);
     setSamplingComplete(false);
     setSelectedSamples([]);

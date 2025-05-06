@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import {
@@ -322,8 +321,11 @@ const Calendar = () => {
     });
   };
 
-  // Render day cell for month view
-  const renderDayCell = ({ date, day }: { date: Date; day: number }) => {
+  // Render day cell for month view - fix the type error
+  const renderDayCell = (props: any) => {
+    const { date } = props;
+    const day = date.getDate(); // Extract the day number from the date
+    
     const tasksForDay = getTasksForDay(date);
     const isCurrentMonth = date.getMonth() === currentDate.getMonth();
     const isToday = isSameDay(date, new Date());
@@ -567,7 +569,7 @@ const Calendar = () => {
                     setCalendarView("day");
                   }}
                   components={{
-                    Day: (day) => renderDayCell(day),
+                    Day: renderDayCell,
                   }}
                 />
               </div>
