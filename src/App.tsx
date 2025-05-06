@@ -1,5 +1,5 @@
 
-import { RouterProvider, createBrowserRouter, Navigate, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate, Outlet } from "react-router-dom";
 import Index from "@/pages/Index";
 import Tasks from "@/pages/Tasks";
 import Clients from "@/pages/Clients";
@@ -12,38 +12,33 @@ import NotFound from "@/pages/NotFound";
 import BillTracking from "@/pages/BillTracking";
 import AuditPerformance from "@/pages/AuditPerformance";
 import Auth from "@/pages/Auth";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "sonner";
 
 import "./App.css";
 
-// Protected route wrapper
-const ProtectedRoute = () => {
-  const { user, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
-  }
-  
-  return user ? <Outlet /> : <Navigate to="/auth" replace />;
+// Public and protected route components
+const ProtectedRouteLayout = () => {
+  return (
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
+  );
 };
 
-// Public route wrapper - redirects to home if already logged in
-const PublicRoute = () => {
-  const { user, isLoading } = useAuth();
-  
-  if (isLoading) {
-    return <div className="flex h-screen w-full items-center justify-center">Loading...</div>;
-  }
-  
-  return !user ? <Outlet /> : <Navigate to="/" replace />;
+const PublicRouteLayout = () => {
+  return (
+    <AuthProvider>
+      <Outlet />
+    </AuthProvider>
+  );
 };
 
 // App component with routing
-const AppRoutes = () => {
+function App() {
   const router = createBrowserRouter([
     {
-      element: <PublicRoute />,
+      element: <PublicRouteLayout />,
       children: [
         {
           path: "/auth",
@@ -52,7 +47,7 @@ const AppRoutes = () => {
       ],
     },
     {
-      element: <ProtectedRoute />,
+      element: <ProtectedRouteLayout />,
       children: [
         {
           path: "/",
@@ -102,15 +97,11 @@ const AppRoutes = () => {
     },
   ]);
 
-  return <RouterProvider router={router} />;
-};
-
-function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
+    <>
+      <RouterProvider router={router} />
       <Toaster position="top-right" richColors />
-    </AuthProvider>
+    </>
   );
 }
 

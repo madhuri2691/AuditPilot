@@ -1,6 +1,5 @@
-
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 import { toast } from "sonner";
@@ -21,9 +20,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // FIRST set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
@@ -32,8 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (event === 'SIGNED_OUT') {
           // Handle sign out
           navigate('/auth');
-        } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          // Handle sign in
+        } else if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && location.pathname === '/auth') {
+          // Only redirect if on auth page
           navigate('/');
         }
       }
@@ -44,10 +44,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+      
+      // Initial redirect if needed
+      if (session && location.pathname === '/auth') {
+        navigate('/');
+      } else if (!session && location.pathname !== '/auth' && !location.pathname.startsWith('/auth')) {
+        navigate('/auth');
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   const signIn = async (email: string, password: string) => {
     try {
