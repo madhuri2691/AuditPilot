@@ -25,8 +25,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -47,6 +47,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -70,32 +71,13 @@ const Auth = () => {
     try {
       setIsLoading(true);
       
-      const { error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
+      await signIn(values.email, values.password);
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: error.message,
-        });
-        return;
-      }
-
-      toast({
-        title: "Login Successful",
+      toast.success("Login Successful", {
         description: "Welcome back to Audit Task Master",
       });
-      
-      navigate("/");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: error.message || "An unexpected error occurred",
-      });
+      // Error is handled in the context
     } finally {
       setIsLoading(false);
     }
@@ -105,52 +87,10 @@ const Auth = () => {
     try {
       setIsLoading(true);
       
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            name: values.name,
-          },
-        },
-      });
-
-      if (signUpError) {
-        toast({
-          variant: "destructive",
-          title: "Registration Failed",
-          description: signUpError.message,
-        });
-        return;
-      }
-
-      // Create a profile in the users table
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert([
-          { 
-            name: values.name, 
-            email: values.email,
-            username: values.name.toLowerCase().replace(/\s+/g, '_')
-          }
-        ]);
-
-      if (profileError) {
-        console.error("Error creating user profile:", profileError);
-      }
-
-      toast({
-        title: "Registration Successful",
-        description: "Please check your email to verify your account",
-      });
-      
+      await signUp(values.email, values.password, values.name);
       setActiveTab("login");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Registration Failed",
-        description: error.message || "An unexpected error occurred",
-      });
+      // Error is handled in the context
     } finally {
       setIsLoading(false);
     }

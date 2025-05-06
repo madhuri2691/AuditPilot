@@ -3,21 +3,69 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Plus, Download, Upload } from "lucide-react";
+import { Search, Filter, Plus, Upload } from "lucide-react";
 import { ClientsList, Client } from "@/components/clients/ClientsList";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader } from "@/components/ui/dialog";
 import { AddClientForm } from "@/components/clients/AddClientForm";
 import { ImportClientsExcel } from "@/components/clients/ImportClientsExcel";
+import { ExportClients } from "@/components/clients/ExportClients";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Sample client data - in a real app, this would come from a database
+const initialClients: Client[] = [
+  {
+    id: "1",
+    name: "ABC Corporation",
+    industry: "Manufacturing",
+    status: "Active",
+    risk: "Medium",
+    fiscalYearEnd: "Dec 31",
+    contactPerson: "John Smith"
+  },
+  {
+    id: "2",
+    name: "XYZ Industries",
+    industry: "Technology",
+    status: "Active",
+    risk: "High",
+    fiscalYearEnd: "Jun 30",
+    contactPerson: "Jane Doe"
+  },
+  {
+    id: "3",
+    name: "Acme Ltd",
+    industry: "Retail",
+    status: "Completed",
+    risk: "Low",
+    fiscalYearEnd: "Mar 31",
+    contactPerson: "Robert Johnson"
+  },
+  {
+    id: "4",
+    name: "Global Services Inc",
+    industry: "Services",
+    status: "Active",
+    risk: "Medium",
+    fiscalYearEnd: "Dec 31",
+    contactPerson: "Sarah Williams"
+  },
+  {
+    id: "5",
+    name: "Tech Solutions",
+    industry: "Technology",
+    status: "On Hold",
+    risk: "High",
+    fiscalYearEnd: "Jun 30",
+    contactPerson: "Mike Brown"
+  }
+];
 
 const Clients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
-  const [clients, setClients] = useState<Client[]>([]);
-  const [activeTab, setActiveTab] = useState("manual");
-
+  const [clients, setClients] = useState<Client[]>(initialClients);
+  
   const handleAddClient = (data: any) => {
     const newClient = {
       id: crypto.randomUUID(),
@@ -46,7 +94,7 @@ const Clients = () => {
                   <Plus className="mr-2 h-4 w-4" /> Add New Client
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[700px]">
+              <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Add New Client</DialogTitle>
                 </DialogHeader>
@@ -74,9 +122,7 @@ const Clients = () => {
               </DialogContent>
             </Dialog>
             
-            <Button variant="outline">
-              <Download className="mr-2 h-4 w-4" /> Export
-            </Button>
+            <ExportClients clients={clients} />
           </div>
         </div>
 

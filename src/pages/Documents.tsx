@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -127,26 +126,22 @@ const Documents = () => {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="mb-4 grid grid-cols-4 md:max-w-3xl">
-                <TabsTrigger value="management" className="flex items-center gap-2">
+              <TabsList className="mb-4 flex flex-col sm:flex-row w-full sm:w-auto sm:grid sm:grid-cols-4 md:max-w-3xl">
+                <TabsTrigger value="management" className="flex items-center gap-2 justify-start sm:justify-center text-xs sm:text-sm">
                   <FileText size={16} />
-                  <span className="hidden sm:inline">Management Representation</span>
-                  <span className="sm:hidden">Represent</span>
+                  <span>Management Letter</span>
                 </TabsTrigger>
-                <TabsTrigger value="engagement" className="flex items-center gap-2">
+                <TabsTrigger value="engagement" className="flex items-center gap-2 justify-start sm:justify-center text-xs sm:text-sm">
                   <FilePen size={16} />
-                  <span className="hidden sm:inline">Engagement Letter</span>
-                  <span className="sm:hidden">Engage</span>
+                  <span>Engagement Letter</span>
                 </TabsTrigger>
-                <TabsTrigger value="consent" className="flex items-center gap-2">
+                <TabsTrigger value="consent" className="flex items-center gap-2 justify-start sm:justify-center text-xs sm:text-sm">
                   <File size={16} />
-                  <span className="hidden sm:inline">Consent Letter</span>
-                  <span className="sm:hidden">Consent</span>
+                  <span>Consent Letter</span>
                 </TabsTrigger>
-                <TabsTrigger value="auditplan" className="flex items-center gap-2">
+                <TabsTrigger value="auditplan" className="flex items-center gap-2 justify-start sm:justify-center text-xs sm:text-sm">
                   <FileX size={16} />
-                  <span className="hidden sm:inline">Audit Plan</span>
-                  <span className="sm:hidden">Plan</span>
+                  <span>Audit Plan</span>
                 </TabsTrigger>
               </TabsList>
               

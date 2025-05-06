@@ -31,7 +31,7 @@ export interface Client {
   auditPartner?: string;
 }
 
-const clients: Client[] = [
+const defaultClients: Client[] = [
   {
     id: "1",
     name: "ABC Corporation",
@@ -79,7 +79,11 @@ const clients: Client[] = [
   }
 ];
 
-export function ClientsList() {
+export interface ClientsListProps {
+  clients?: Client[];
+}
+
+export function ClientsList({ clients = defaultClients }: ClientsListProps) {
   return (
     <Table>
       <TableHeader>

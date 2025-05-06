@@ -22,6 +22,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const clientSchema = z.object({
   name: z.string().min(2, "Client name is required"),
@@ -75,255 +76,272 @@ export function AddClientForm({ onSubmit, onCancel }: AddClientFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Client Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="ABC Corporation" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="engagementType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Engagement Type</FormLabel>
-                <FormControl>
-                  <Input placeholder="Audit" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="industry"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Industry</FormLabel>
-                <FormControl>
-                  <Input placeholder="Manufacturing" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="fiscalYearEnd"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fiscal Year End</FormLabel>
-                <FormControl>
-                  <Input placeholder="Dec 31" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="contactPerson"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Contact Person</FormLabel>
-                <FormControl>
-                  <Input placeholder="John Smith" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="contact@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="+1 (555) 123-4567" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="constitution"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Constitution</FormLabel>
-                <FormControl>
-                  <Input placeholder="LLC" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="auditFee"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Audit Fee</FormLabel>
-                <FormControl>
-                  <Input placeholder="10,000" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="auditStartDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Audit Start Date</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="auditCompletionDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target Completion Date</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="assignmentStaff"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Assignment Staff</FormLabel>
-                <FormControl>
-                  <Input placeholder="Jane Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="auditPartner"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Audit Partner</FormLabel>
-                <FormControl>
-                  <Input placeholder="Robert Johnson" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="risk"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Risk Level</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <ScrollArea className="h-[calc(65vh-120px)] pr-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-2 pr-2">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Client Name</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select risk level" />
-                    </SelectTrigger>
+                    <Input placeholder="ABC Corporation" {...field} className="text-sm" />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Low">Low</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
-                    <SelectItem value="High">High</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="engagementType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Engagement Type</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
+                    <Input placeholder="Audit" {...field} className="text-sm" />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="On Hold">On Hold</SelectItem>
-                    <SelectItem value="Completed">Completed</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Address</FormLabel>
-              <FormControl>
-                <Textarea placeholder="123 Main St, City, State, ZIP" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Industry</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Manufacturing" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
 
-        <div className="flex justify-end space-x-2">
-          <Button variant="outline" type="button" onClick={onCancel}>
+            <FormField
+              control={form.control}
+              name="fiscalYearEnd"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Fiscal Year End</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Dec 31" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="contactPerson"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Contact Person</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Smith" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="contact@example.com" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Phone Number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+1 (555) 123-4567" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="constitution"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Constitution</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="text-sm">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="corporate">Corporate</SelectItem>
+                        <SelectItem value="partnership">Partnership</SelectItem>
+                        <SelectItem value="proprietorship">Proprietorship</SelectItem>
+                        <SelectItem value="trust">Trust</SelectItem>
+                        <SelectItem value="llc">LLC</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="auditFee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Audit Fee</FormLabel>
+                  <FormControl>
+                    <Input placeholder="10,000" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="auditStartDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Audit Start Date</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="auditCompletionDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Completion Date</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="assignmentStaff"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Assignment Staff</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Jane Doe" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="auditPartner"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Audit Partner</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Robert Johnson" {...field} className="text-sm" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="risk"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Risk Level</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="text-sm">
+                        <SelectValue placeholder="Select risk level" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Low">Low</SelectItem>
+                      <SelectItem value="Medium">Medium</SelectItem>
+                      <SelectItem value="High">High</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="text-sm">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Active">Active</SelectItem>
+                      <SelectItem value="On Hold">On Hold</SelectItem>
+                      <SelectItem value="Completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="mt-4">
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Address</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="123 Main St, City, State, ZIP" {...field} className="resize-none text-sm" rows={3} />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+          </div>
+        </ScrollArea>
+
+        <div className="flex justify-end space-x-2 pt-2 border-t">
+          <Button variant="outline" type="button" onClick={onCancel} size="sm">
             Cancel
           </Button>
-          <Button type="submit">Save Client</Button>
+          <Button type="submit" size="sm">Save Client</Button>
         </div>
       </form>
     </Form>
