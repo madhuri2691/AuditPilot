@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,11 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { INITIAL_TASK, Task } from "./TaskModel";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { getClients } from "@/services/clientService";
 
 const taskSchema = z.object({
   name: z.string().min(1, "Task name is required"),
-  client: z.string().min(1, "Client is required"),
+  client_id: z.string().min(1, "Client is required"),
   assignee: z.string().min(1, "Assignee is required"),
   status: z.enum(["Not Started", "In Progress", "Review", "Complete"]),
   deadline: z.string().min(1, "Deadline is required"),
@@ -40,13 +40,38 @@ interface TaskFormProps {
   clients: { id: string; name: string }[];
 }
 
-export function TaskForm({ onSubmit, clients }: TaskFormProps) {
-  const { toast } = useToast();
+export function TaskForm({ onSubmit, clients: initialClients }: TaskFormProps) {
+  const [clients, setClients] = useState(initialClients);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch clients if none provided
+  useEffect(() => {
+    const fetchClientsIfNeeded = async () => {
+      if (initialClients.length === 0) {
+        setIsLoading(true);
+        try {
+          const fetchedClients = await getClients();
+          setClients(fetchedClients.map(client => ({
+            id: client.id || '',
+            name: client.name
+          })));
+        } catch (error) {
+          console.error("Error fetching clients:", error);
+          toast.error("Failed to load clients");
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchClientsIfNeeded();
+  }, [initialClients]);
+
   const form = useForm<z.infer<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       name: "",
-      client: "",
+      client_id: "",
       assignee: "",
       status: "Not Started",
       deadline: "",
@@ -57,9 +82,13 @@ export function TaskForm({ onSubmit, clients }: TaskFormProps) {
   });
 
   const handleSubmit = (data: z.infer<typeof taskSchema>) => {
+    // Find the client name by ID
+    const selectedClient = clients.find(c => c.id === data.client_id);
+    
     const newTask: Task = {
       ...INITIAL_TASK,
       ...data,
+      client: selectedClient?.name || '',
       id: crypto.randomUUID(),
       progress: data.status === "Complete" ? 100 : 0,
     };
@@ -91,7 +120,7 @@ export function TaskForm({ onSubmit, clients }: TaskFormProps) {
 
         <FormField
           control={form.control}
-          name="client"
+          name="client_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Client</FormLabel>
@@ -101,15 +130,19 @@ export function TaskForm({ onSubmit, clients }: TaskFormProps) {
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select client" />
+                    <SelectValue placeholder={isLoading ? "Loading clients..." : "Select client"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {clients.map((client) => (
-                    <SelectItem key={client.id} value={client.name}>
-                      {client.name}
-                    </SelectItem>
-                  ))}
+                  {clients.length === 0 ? (
+                    <SelectItem value="no-clients" disabled>No clients available</SelectItem>
+                  ) : (
+                    clients.map((client) => (
+                      <SelectItem key={client.id} value={client.id}>
+                        {client.name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />

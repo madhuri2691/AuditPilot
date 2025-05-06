@@ -31,7 +31,11 @@ export const getClients = async () => {
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching clients:', error);
+      toast.error('Failed to load clients');
+      throw error;
+    }
     
     return data || [];
   } catch (error: any) {
@@ -43,19 +47,38 @@ export const getClients = async () => {
 
 export const addClient = async (client: Client) => {
   try {
+    // Make sure required fields are present
+    if (!client.name) {
+      toast.error('Client name is required');
+      throw new Error('Client name is required');
+    }
+
+    console.log('Adding client:', client);
+    
     const { data, error } = await supabase
       .from('clients')
       .insert([client])
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase error adding client:', error);
+      toast.error(`Failed to add client: ${error.message}`);
+      throw error;
+    }
     
+    if (!data) {
+      console.error('No data returned when adding client');
+      toast.error('Failed to add client: No data returned');
+      throw new Error('No data returned when adding client');
+    }
+    
+    console.log('Client added successfully:', data);
     toast.success('Client added successfully');
     return data;
   } catch (error: any) {
     console.error('Error adding client:', error);
-    toast.error('Failed to add client');
+    toast.error(`Failed to add client: ${error.message || 'Unknown error'}`);
     throw error;
   }
 };

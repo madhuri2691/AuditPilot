@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +17,7 @@ const Clients = () => {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Fetch clients on component mount
   const fetchClients = async () => {
@@ -39,11 +39,18 @@ const Clients = () => {
   
   const handleAddClient = async (data: any) => {
     try {
+      setIsSubmitting(true);
+      console.log("Submitting client data:", data);
       const newClient = await addClient(data);
+      console.log("Client added:", newClient);
       setClients((prev) => [newClient, ...prev]);
       setAddDialogOpen(false);
-    } catch (error) {
+      toast.success("Client added successfully");
+    } catch (error: any) {
       console.error("Error adding client:", error);
+      toast.error(`Failed to add client: ${error.message || "Unknown error"}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
@@ -84,7 +91,8 @@ const Clients = () => {
                 </DialogHeader>
                 <AddClientForm 
                   onSubmit={handleAddClient} 
-                  onCancel={() => setAddDialogOpen(false)} 
+                  onCancel={() => setAddDialogOpen(false)}
+                  isSubmitting={isSubmitting}
                 />
               </DialogContent>
             </Dialog>

@@ -1,4 +1,5 @@
 
+// Only modifying the necessary parts
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Loader2 } from "lucide-react";
 
 const clientSchema = z.object({
   name: z.string().min(2, "Client name is required"),
@@ -48,9 +50,10 @@ type ClientFormValues = z.infer<typeof clientSchema>;
 interface AddClientFormProps {
   onSubmit: (data: ClientFormValues) => void;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
-export function AddClientForm({ onSubmit, onCancel }: AddClientFormProps) {
+export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddClientFormProps) {
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -73,9 +76,18 @@ export function AddClientForm({ onSubmit, onCancel }: AddClientFormProps) {
     },
   });
 
+  const handleFormSubmit = async (data: ClientFormValues) => {
+    try {
+      console.log('Form data being submitted:', data);
+      await onSubmit(data);
+    } catch (error) {
+      console.error("Error in form submission:", error);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
         <ScrollArea className="h-[calc(65vh-120px)] pr-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-2 pr-2">
             <FormField
@@ -338,10 +350,19 @@ export function AddClientForm({ onSubmit, onCancel }: AddClientFormProps) {
         </ScrollArea>
 
         <div className="flex justify-end space-x-2 pt-2 border-t">
-          <Button variant="outline" type="button" onClick={onCancel} size="sm">
+          <Button variant="outline" type="button" onClick={onCancel} size="sm" disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button type="submit" size="sm">Save Client</Button>
+          <Button type="submit" size="sm" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Client"
+            )}
+          </Button>
         </div>
       </form>
     </Form>
