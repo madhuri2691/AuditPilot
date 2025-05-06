@@ -7,9 +7,7 @@ import { Task } from '@/components/tasks/TaskModel';
 export interface TaskDB {
   id?: string;
   name: string;
-  client?: string;
   client_id?: string;
-  assignee?: string;
   assignee_id?: string;
   status: string;
   progress?: number;
@@ -19,6 +17,8 @@ export interface TaskDB {
   description?: string;
   created_at?: string;
   updated_at?: string;
+  // Add this to store client name separately from the join
+  client?: string;
 }
 
 // Get all tasks
@@ -82,12 +82,20 @@ export const addTask = async (task: Task): Promise<TaskDB> => {
         .single();
       
       if (!clientError && clientData) {
-        data.client = clientData.name;
+        // Create a new object with the client property
+        const taskWithClient = {
+          ...data,
+          client: clientData.name
+        };
+        
+        toast.success('Task added successfully');
+        return taskWithClient;
       }
     }
     
+    // If no client data was found, return the task without client name
     toast.success('Task added successfully');
-    return data;
+    return { ...data, client: '' };
   } catch (error: any) {
     console.error('Error adding task:', error);
     toast.error('Failed to add task');
@@ -116,12 +124,20 @@ export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<
         .single();
       
       if (!clientError && clientData) {
-        data.client = clientData.name;
+        // Create a new object with the client property
+        const taskWithClient = {
+          ...data,
+          client: clientData.name
+        };
+        
+        toast.success('Task updated successfully');
+        return taskWithClient;
       }
     }
     
+    // If no client data was found, return the task without client name
     toast.success('Task updated successfully');
-    return data;
+    return { ...data, client: '' };
   } catch (error: any) {
     console.error('Error updating task:', error);
     toast.error('Failed to update task');
