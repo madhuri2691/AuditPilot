@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -16,6 +15,13 @@ export interface Client {
   address?: string;
   entity_type?: string;
   priority?: string;
+  constitution?: string;
+  auditFee?: string;
+  engagementType?: string;
+  auditStartDate?: string;
+  auditCompletionDate?: string;
+  assignmentStaff?: string;
+  auditPartner?: string;
 }
 
 export const getClients = async () => {

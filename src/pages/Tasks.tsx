@@ -7,8 +7,9 @@ import { TasksList } from "@/components/tasks/TasksList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskForm } from "@/components/tasks/TaskForm";
 import { ImportTasksExcel } from "@/components/tasks/ImportTasksExcel";
-import { getTasks, addTask, updateTask, Task } from "@/services/taskService";
+import { getTasks, addTask, updateTask } from "@/services/taskService";
 import { getClients } from "@/services/clientService";
+import { Task } from "@/components/tasks/TaskModel";
 
 // Sample client data - in a real app, this would come from an API or state
 const sampleClients = [
@@ -44,9 +45,27 @@ const Tasks = () => {
         
         setClients(formattedClients);
         
+        // Map database tasks to frontend Task model
+        const mappedTasks = tasksData.map(task => ({
+          id: task.id || '',
+          name: task.name,
+          client: task.client || '',
+          client_id: task.client_id,
+          assignee: task.assignee || '',
+          assignee_id: task.assignee_id,
+          status: mapStatusToEnum(task.status),
+          progress: task.progress || 0,
+          deadline: task.deadline || '',
+          typeOfService: task.type_of_service || '',
+          type_of_service: task.type_of_service,
+          sacCode: task.sac_code || '',
+          sac_code: task.sac_code,
+          description: task.description || ''
+        } as Task));
+        
         // Split tasks into active and completed
-        const active = tasksData.filter(task => task.status !== 'Complete');
-        const completed = tasksData.filter(task => task.status === 'Complete');
+        const active = mappedTasks.filter(task => task.status !== 'Complete');
+        const completed = mappedTasks.filter(task => task.status === 'Complete');
         
         setActiveTasks(active);
         setCompletedTasks(completed);
@@ -60,18 +79,46 @@ const Tasks = () => {
     fetchData();
   }, []);
 
+  // Helper function to map string status to enum status
+  const mapStatusToEnum = (status: string): Task["status"] => {
+    switch (status) {
+      case "Not Started": return "Not Started";
+      case "In Progress": return "In Progress";
+      case "Review": return "Review";
+      case "Complete": return "Complete";
+      default: return "Not Started";
+    }
+  };
+
   // Function to handle adding a new task
   const handleAddTask = async (task: Task) => {
     try {
       const newTask = await addTask(task);
       
-      if (newTask.status === "Complete") {
-        setCompletedTasks([newTask, ...completedTasks]);
+      const mappedTask: Task = {
+        id: newTask.id || '',
+        name: newTask.name,
+        client: newTask.client || '',
+        client_id: newTask.client_id,
+        assignee: newTask.assignee || '',
+        assignee_id: newTask.assignee_id,
+        status: mapStatusToEnum(newTask.status),
+        progress: newTask.progress || 0,
+        deadline: newTask.deadline || '',
+        typeOfService: newTask.type_of_service || '',
+        type_of_service: newTask.type_of_service,
+        sacCode: newTask.sac_code || '',
+        sac_code: newTask.sac_code,
+        description: newTask.description || ''
+      };
+      
+      if (mappedTask.status === "Complete") {
+        setCompletedTasks([mappedTask, ...completedTasks]);
       } else {
-        setActiveTasks([newTask, ...activeTasks]);
+        setActiveTasks([mappedTask, ...activeTasks]);
       }
       
-      return newTask;
+      return mappedTask;
     } catch (error) {
       console.error("Error adding task:", error);
       throw error;
@@ -86,8 +133,27 @@ const Tasks = () => {
       
       // Refresh task lists
       const tasksData = await getTasks();
-      const active = tasksData.filter(task => task.status !== 'Complete');
-      const completed = tasksData.filter(task => task.status === 'Complete');
+      
+      // Map database tasks to frontend Task model
+      const mappedTasks = tasksData.map(task => ({
+        id: task.id || '',
+        name: task.name,
+        client: task.client || '',
+        client_id: task.client_id,
+        assignee: task.assignee || '',
+        assignee_id: task.assignee_id,
+        status: mapStatusToEnum(task.status),
+        progress: task.progress || 0,
+        deadline: task.deadline || '',
+        typeOfService: task.type_of_service || '',
+        type_of_service: task.type_of_service,
+        sacCode: task.sac_code || '',
+        sac_code: task.sac_code,
+        description: task.description || ''
+      } as Task));
+      
+      const active = mappedTasks.filter(task => task.status !== 'Complete');
+      const completed = mappedTasks.filter(task => task.status === 'Complete');
       
       setActiveTasks(active);
       setCompletedTasks(completed);
@@ -109,10 +175,27 @@ const Tasks = () => {
         progress 
       });
       
+      const mappedTask: Task = {
+        id: updatedTask.id || '',
+        name: updatedTask.name,
+        client: updatedTask.client || '',
+        client_id: updatedTask.client_id,
+        assignee: updatedTask.assignee || '',
+        assignee_id: updatedTask.assignee_id,
+        status: mapStatusToEnum(updatedTask.status),
+        progress: updatedTask.progress || 0,
+        deadline: updatedTask.deadline || '',
+        typeOfService: updatedTask.type_of_service || '',
+        type_of_service: updatedTask.type_of_service,
+        sacCode: updatedTask.sac_code || '',
+        sac_code: updatedTask.sac_code,
+        description: updatedTask.description || ''
+      };
+      
       // If task is marked as complete, move to completed list
       if (newStatus === "Complete") {
         setActiveTasks(activeTasks.filter(task => task.id !== taskId));
-        setCompletedTasks([updatedTask, ...completedTasks]);
+        setCompletedTasks([mappedTask, ...completedTasks]);
       } else {
         // Otherwise just update the status
         setActiveTasks(activeTasks.map(task => {
@@ -143,8 +226,25 @@ const Tasks = () => {
         progress: 50 
       });
       
+      const mappedTask: Task = {
+        id: updatedTask.id || '',
+        name: updatedTask.name,
+        client: updatedTask.client || '',
+        client_id: updatedTask.client_id,
+        assignee: updatedTask.assignee || '',
+        assignee_id: updatedTask.assignee_id,
+        status: "In Progress",
+        progress: 50,
+        deadline: updatedTask.deadline || '',
+        typeOfService: updatedTask.type_of_service || '',
+        type_of_service: updatedTask.type_of_service,
+        sacCode: updatedTask.sac_code || '',
+        sac_code: updatedTask.sac_code,
+        description: updatedTask.description || ''
+      };
+      
       setCompletedTasks(completedTasks.filter(task => task.id !== taskId));
-      setActiveTasks([updatedTask, ...activeTasks]);
+      setActiveTasks([mappedTask, ...activeTasks]);
     } catch (error) {
       console.error("Error reactivating task:", error);
     }

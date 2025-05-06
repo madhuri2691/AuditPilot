@@ -3,13 +3,19 @@ export interface Task {
   id: string;
   name: string;
   client: string;
+  client_id?: string;
   assignee: string;
+  assignee_id?: string;
   status: "Not Started" | "In Progress" | "Review" | "Complete";
   progress: number;
   deadline: string;
   typeOfService?: string;
+  type_of_service?: string;
   sacCode?: string;
+  sac_code?: string;
   description?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export const INITIAL_TASK: Task = {

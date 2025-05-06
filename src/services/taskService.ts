@@ -1,51 +1,47 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { Task } from '@/components/tasks/TaskModel';
 
-export interface Task {
+// Export the interface for DB tasks
+export interface TaskDB {
   id?: string;
   name: string;
-  client_id?: string;
   client?: string;
-  assignee_id?: string;
+  client_id?: string;
   assignee?: string;
-  status: 'Not Started' | 'In Progress' | 'Review' | 'Complete';
+  assignee_id?: string;
+  status: string;
   progress?: number;
   deadline?: string;
-  typeOfService?: string;
   type_of_service?: string;
-  description?: string;
   sac_code?: string;
+  description?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export const getTasks = async () => {
+// Get all tasks
+export const getTasks = async (): Promise<TaskDB[]> => {
   try {
     const { data, error } = await supabase
       .from('tasks')
-      .select(`
-        *,
-        clients(name)
-      `)
+      .select('*, clients(name)')
       .order('created_at', { ascending: false });
     
     if (error) throw error;
     
-    // Transform the data to match the expected Task interface
-    const transformedData = data.map(item => ({
-      id: item.id,
-      name: item.name,
-      client_id: item.client_id,
-      client: item.clients ? item.clients.name : '',
-      assignee_id: item.assignee_id,
-      status: item.status,
-      progress: item.progress,
-      deadline: item.deadline,
-      type_of_service: item.type_of_service,
-      description: item.description,
-      sac_code: item.sac_code
-    }));
+    // Map the data to include client name from the join
+    const tasksWithClientNames = data.map(task => {
+      const clients = task.clients as any;
+      return {
+        ...task,
+        client: clients?.name || '',
+        clients: undefined  // Remove the nested object
+      };
+    });
     
-    return transformedData || [];
+    return tasksWithClientNames;
   } catch (error: any) {
     console.error('Error fetching tasks:', error);
     toast.error('Failed to load tasks');
@@ -53,10 +49,11 @@ export const getTasks = async () => {
   }
 };
 
-export const addTask = async (task: Task) => {
+// Add a new task
+export const addTask = async (task: Task): Promise<TaskDB> => {
   try {
-    // Format the task object to match the database schema
-    const formattedTask = {
+    // Convert frontend task model to DB model
+    const dbTask: TaskDB = {
       name: task.name,
       client_id: task.client_id,
       assignee_id: task.assignee_id,
@@ -64,17 +61,30 @@ export const addTask = async (task: Task) => {
       progress: task.progress,
       deadline: task.deadline,
       type_of_service: task.typeOfService || task.type_of_service,
-      description: task.description,
-      sac_code: task.sac_code
+      sac_code: task.sacCode || task.sac_code,
+      description: task.description
     };
     
     const { data, error } = await supabase
       .from('tasks')
-      .insert([formattedTask])
+      .insert([dbTask])
       .select()
       .single();
     
     if (error) throw error;
+    
+    // Get client name for the returned task
+    if (data.client_id) {
+      const { data: clientData, error: clientError } = await supabase
+        .from('clients')
+        .select('name')
+        .eq('id', data.client_id)
+        .single();
+      
+      if (!clientError && clientData) {
+        data.client = clientData.name;
+      }
+    }
     
     toast.success('Task added successfully');
     return data;
@@ -85,29 +95,30 @@ export const addTask = async (task: Task) => {
   }
 };
 
-export const updateTask = async (id: string, task: Partial<Task>) => {
+// Update a task
+export const updateTask = async (id: string, updates: Partial<TaskDB>): Promise<TaskDB> => {
   try {
-    // Format the task object to match the database schema
-    const formattedTask: any = {};
-    if (task.name) formattedTask.name = task.name;
-    if (task.client_id) formattedTask.client_id = task.client_id;
-    if (task.assignee_id) formattedTask.assignee_id = task.assignee_id;
-    if (task.status) formattedTask.status = task.status;
-    if (task.progress !== undefined) formattedTask.progress = task.progress;
-    if (task.deadline) formattedTask.deadline = task.deadline;
-    if (task.typeOfService || task.type_of_service) 
-      formattedTask.type_of_service = task.typeOfService || task.type_of_service;
-    if (task.description) formattedTask.description = task.description;
-    if (task.sac_code) formattedTask.sac_code = task.sac_code;
-    
     const { data, error } = await supabase
       .from('tasks')
-      .update(formattedTask)
+      .update(updates)
       .eq('id', id)
       .select()
       .single();
     
     if (error) throw error;
+    
+    // Get client name for the returned task
+    if (data.client_id) {
+      const { data: clientData, error: clientError } = await supabase
+        .from('clients')
+        .select('name')
+        .eq('id', data.client_id)
+        .single();
+      
+      if (!clientError && clientData) {
+        data.client = clientData.name;
+      }
+    }
     
     toast.success('Task updated successfully');
     return data;
@@ -118,7 +129,8 @@ export const updateTask = async (id: string, task: Partial<Task>) => {
   }
 };
 
-export const deleteTask = async (id: string) => {
+// Delete a task
+export const deleteTask = async (id: string): Promise<boolean> => {
   try {
     const { error } = await supabase
       .from('tasks')
