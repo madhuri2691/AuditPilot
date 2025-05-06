@@ -321,9 +321,8 @@ const Calendar = () => {
     });
   };
 
-  // Render day cell for month view - fix the type error
-  const renderDayCell = (props: any) => {
-    const { date } = props;
+  // Render day cell for month view
+  const renderDayCell = (date: Date) => {
     const day = date.getDate(); // Extract the day number from the date
     
     const tasksForDay = getTasksForDay(date);
@@ -418,29 +417,13 @@ const Calendar = () => {
                 </h2>
               </div>
               <div className="flex items-center">
-                <TabsList className="mr-4">
-                  <TabsTrigger
-                    value="month"
-                    onClick={() => handleViewChange("month")}
-                    className={calendarView === "month" ? "bg-primary text-primary-foreground" : ""}
-                  >
-                    Month
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="week"
-                    onClick={() => handleViewChange("week")}
-                    className={calendarView === "week" ? "bg-primary text-primary-foreground" : ""}
-                  >
-                    Week
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="day"
-                    onClick={() => handleViewChange("day")}
-                    className={calendarView === "day" ? "bg-primary text-primary-foreground" : ""}
-                  >
-                    Day
-                  </TabsTrigger>
-                </TabsList>
+                <Tabs value={calendarView} onValueChange={handleViewChange as (value: string) => void} className="mr-4">
+                  <TabsList>
+                    <TabsTrigger value="month">Month</TabsTrigger>
+                    <TabsTrigger value="week">Week</TabsTrigger>
+                    <TabsTrigger value="day">Day</TabsTrigger>
+                  </TabsList>
+                </Tabs>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
@@ -569,7 +552,7 @@ const Calendar = () => {
                     setCalendarView("day");
                   }}
                   components={{
-                    Day: renderDayCell,
+                    Day: ({ date }) => renderDayCell(date),
                   }}
                 />
               </div>

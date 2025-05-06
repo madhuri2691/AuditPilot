@@ -49,7 +49,6 @@ const Settings = () => {
                 <Tabs
                   value={activeTab}
                   onValueChange={setActiveTab}
-                  orientation="vertical"
                   className="w-full"
                 >
                   <TabsList className="flex flex-col h-auto items-start bg-transparent p-0">
