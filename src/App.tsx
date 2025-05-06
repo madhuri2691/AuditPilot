@@ -11,6 +11,7 @@ import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
 import BillTracking from "@/pages/BillTracking";
 import AuditPerformance from "@/pages/AuditPerformance";
+import Auth from "@/pages/Auth";
 
 import "./App.css";
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
   {
     path: "/audit-performance",
     element: <AuditPerformance />,
+  },
+  {
+    path: "/auth",
+    element: <Auth />,
   },
   {
     path: "*",

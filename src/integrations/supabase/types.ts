@@ -9,28 +9,512 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      audit_checklists: {
+        Row: {
+          assessment_year: string | null
+          created_at: string
+          financial_year: string | null
+          id: string
+          start_date: string | null
+          task_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          assessment_year?: string | null
+          created_at?: string
+          financial_year?: string | null
+          id?: string
+          start_date?: string | null
+          task_id: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          assessment_year?: string | null
+          created_at?: string
+          financial_year?: string | null
+          id?: string
+          start_date?: string | null
+          task_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_checklists_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bills: {
+        Row: {
+          amount: number
+          client_id: string
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          invoice_date: string
+          invoice_number: string
+          last_reminder_date: string | null
+          reminder_sent: boolean | null
+          status: string
+          task_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          client_id: string
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          invoice_date: string
+          invoice_number: string
+          last_reminder_date?: string | null
+          reminder_sent?: boolean | null
+          status: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          client_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          invoice_date?: string
+          invoice_number?: string
+          last_reminder_date?: string | null
+          reminder_sent?: boolean | null
+          status?: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bills_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checklist_items: {
+        Row: {
+          area: string
+          checklist_id: string
+          created_at: string
+          id: string
+          is_done: boolean | null
+          procedure: string
+          remarks: string | null
+          responsibility: string | null
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          area: string
+          checklist_id: string
+          created_at?: string
+          id?: string
+          is_done?: boolean | null
+          procedure: string
+          remarks?: string | null
+          responsibility?: string | null
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          area?: string
+          checklist_id?: string
+          created_at?: string
+          id?: string
+          is_done?: boolean | null
+          procedure?: string
+          remarks?: string | null
+          responsibility?: string | null
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checklist_items_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "audit_checklists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_team_members: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          role?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_team_members_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_team_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          address: string | null
+          contact_person: string | null
+          contact_role: string | null
+          created_at: string
+          email: string | null
+          entity_type: string | null
+          fiscal_year_end: string | null
+          id: string
+          industry: string | null
+          name: string
+          phone: string | null
+          priority: string | null
+          risk_level: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          contact_person?: string | null
+          contact_role?: string | null
+          created_at?: string
+          email?: string | null
+          entity_type?: string | null
+          fiscal_year_end?: string | null
+          id?: string
+          industry?: string | null
+          name: string
+          phone?: string | null
+          priority?: string | null
+          risk_level?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          contact_person?: string | null
+          contact_role?: string | null
+          created_at?: string
+          email?: string | null
+          entity_type?: string | null
+          fiscal_year_end?: string | null
+          id?: string
+          industry?: string | null
+          name?: string
+          phone?: string | null
+          priority?: string | null
+          risk_level?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          storage_path: string | null
+          task_id: string | null
+          type: string
+          updated_at: string
+          version: number | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          storage_path?: string | null
+          task_id?: string | null
+          type: string
+          updated_at?: string
+          version?: number | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          storage_path?: string | null
+          task_id?: string | null
+          type?: string
+          updated_at?: string
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      financial_analysis: {
+        Row: {
+          client_id: string
+          created_at: string
+          data: Json | null
+          id: string
+          task_id: string | null
+          updated_at: string
+          variances: Json | null
+          year: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          data?: Json | null
+          id?: string
+          task_id?: string | null
+          updated_at?: string
+          variances?: Json | null
+          year: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          data?: Json | null
+          id?: string
+          task_id?: string | null
+          updated_at?: string
+          variances?: Json | null
+          year?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_analysis_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_analysis_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_settings: {
+        Row: {
+          address: string | null
+          created_at: string
+          firm_name: string
+          gstin: string | null
+          id: string
+          is_igst: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          firm_name: string
+          gstin?: string | null
+          id?: string
+          is_igst?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          firm_name?: string
+          gstin?: string | null
+          id?: string
+          is_igst?: boolean | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sampling_records: {
+        Row: {
+          created_at: string
+          id: string
+          module_type: string
+          sample_parameters: Json | null
+          sample_results: Json | null
+          task_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          module_type: string
+          sample_parameters?: Json | null
+          sample_results?: Json | null
+          task_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          module_type?: string
+          sample_parameters?: Json | null
+          sample_results?: Json | null
+          task_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sampling_records_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assignee_id: string | null
+          client_id: string | null
+          created_at: string
+          deadline: string | null
+          description: string | null
+          id: string
+          name: string
+          progress: number | null
+          sac_code: string | null
+          status: string
+          type_of_service: string | null
+          updated_at: string
+        }
+        Insert: {
+          assignee_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          progress?: number | null
+          sac_code?: string | null
+          status: string
+          type_of_service?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assignee_id?: string | null
+          client_id?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          progress?: number | null
+          sac_code?: string | null
+          status?: string
+          type_of_service?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assignee_id_fkey"
+            columns: ["assignee_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string
           email: string | null
-          id: number
+          id: string
           name: string | null
+          updated_at: string
           user_id: string | null
           username: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
-          id?: number
+          id?: string
           name?: string | null
+          updated_at?: string
           user_id?: string | null
           username?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
-          id?: number
+          id?: string
           name?: string | null
+          updated_at?: string
           user_id?: string | null
           username?: string | null
         }
@@ -41,7 +525,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
