@@ -6,7 +6,7 @@ export const taskSchema = z.object({
   client_id: z.string().min(1, "Client is required"),
   assignee: z.string().min(1, "Assignee is required"),
   status: z.enum(["Not Started", "In Progress", "Review", "Complete"]),
-  deadline: z.string().min(1, "Deadline is required"),
+  deadline: z.string().min(1, "Period ended date is required"),
   typeOfService: z.string().optional(),
   sacCode: z.string().optional(),
   description: z.string().optional(),
