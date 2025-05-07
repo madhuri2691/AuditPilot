@@ -25,6 +25,21 @@ export interface Client {
   auditPartner?: string;
 }
 
+// Helper function to format date strings to ISO format
+const formatDateForDB = (dateStr: string | undefined): string | null => {
+  if (!dateStr) return null;
+  
+  try {
+    // Convert to ISO string and take just the date part (YYYY-MM-DD)
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return null;
+    return date.toISOString().split('T')[0];
+  } catch (e) {
+    console.error('Invalid date format:', dateStr);
+    return null;
+  }
+};
+
 export const getClients = async () => {
   try {
     const { data, error } = await supabase
@@ -54,7 +69,7 @@ export const addClient = async (client: Client) => {
       throw new Error('Client name is required');
     }
 
-    // Map client properties to match the database column names
+    // Map client properties to match the database column names and format dates
     const mappedClient = {
       name: client.name,
       industry: client.industry,
@@ -71,13 +86,13 @@ export const addClient = async (client: Client) => {
       constitution: client.constitution,
       audit_fee: client.auditFee,
       engagement_type: client.engagementType,
-      audit_start_date: client.auditStartDate,
-      audit_completion_date: client.auditCompletionDate,
+      audit_start_date: formatDateForDB(client.auditStartDate),
+      audit_completion_date: formatDateForDB(client.auditCompletionDate),
       assignment_staff: client.assignmentStaff,
       audit_partner: client.auditPartner
     };
     
-    console.log('Adding client:', mappedClient);
+    console.log('Adding client with formatted dates:', mappedClient);
     
     const { data, error } = await supabase
       .from('clients')
@@ -127,8 +142,8 @@ export const updateClient = async (id: string, client: Partial<Client>) => {
     if (client.constitution) mappedClient.constitution = client.constitution;
     if (client.auditFee) mappedClient.audit_fee = client.auditFee;
     if (client.engagementType) mappedClient.engagement_type = client.engagementType;
-    if (client.auditStartDate) mappedClient.audit_start_date = client.auditStartDate;
-    if (client.auditCompletionDate) mappedClient.audit_completion_date = client.auditCompletionDate;
+    if (client.auditStartDate) mappedClient.audit_start_date = formatDateForDB(client.auditStartDate);
+    if (client.auditCompletionDate) mappedClient.audit_completion_date = formatDateForDB(client.auditCompletionDate);
     if (client.assignmentStaff) mappedClient.assignment_staff = client.assignmentStaff;
     if (client.auditPartner) mappedClient.audit_partner = client.auditPartner;
     
