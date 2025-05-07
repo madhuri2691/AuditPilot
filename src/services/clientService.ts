@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -30,10 +29,8 @@ const formatDateForDB = (dateStr: string | undefined): string | null => {
   if (!dateStr) return null;
   
   try {
-    // Convert to ISO string and take just the date part (YYYY-MM-DD)
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return null;
-    return date.toISOString().split('T')[0];
+    // The date should already be in YYYY-MM-DD format from the datepicker
+    return dateStr;
   } catch (e) {
     console.error('Invalid date format:', dateStr);
     return null;
@@ -75,7 +72,7 @@ export const addClient = async (client: Client) => {
       industry: client.industry,
       status: client.status,
       risk_level: client.risk,
-      fiscal_year_end: client.fiscalYearEnd,
+      fiscal_year_end: formatDateForDB(client.fiscalYearEnd),
       contact_person: client.contactPerson,
       contact_role: client.contactRole,
       email: client.email,
@@ -131,7 +128,7 @@ export const updateClient = async (id: string, client: Partial<Client>) => {
     if (client.industry) mappedClient.industry = client.industry;
     if (client.status) mappedClient.status = client.status;
     if (client.risk) mappedClient.risk_level = client.risk;
-    if (client.fiscalYearEnd) mappedClient.fiscal_year_end = client.fiscalYearEnd;
+    if (client.fiscalYearEnd) mappedClient.fiscal_year_end = formatDateForDB(client.fiscalYearEnd);
     if (client.contactPerson) mappedClient.contact_person = client.contactPerson;
     if (client.contactRole) mappedClient.contact_role = client.contactRole;
     if (client.email) mappedClient.email = client.email;

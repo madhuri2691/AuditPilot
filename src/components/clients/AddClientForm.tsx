@@ -1,9 +1,9 @@
 
-// Only modifying the necessary parts
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 
 import {
   Form,
@@ -24,7 +24,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2 } from "lucide-react";
+import { Loader2, CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 const clientSchema = z.object({
   name: z.string().min(2, "Client name is required"),
@@ -52,6 +55,81 @@ interface AddClientFormProps {
   onCancel: () => void;
   isSubmitting?: boolean;
 }
+
+// Helper component for date inputs
+const DatePickerField = ({ 
+  form, 
+  name, 
+  label 
+}: { 
+  form: any, 
+  name: "fiscalYearEnd" | "auditStartDate" | "auditCompletionDate", 
+  label: string 
+}) => {
+  const [date, setDate] = React.useState<Date | undefined>();
+
+  React.useEffect(() => {
+    const value = form.getValues(name);
+    if (value) {
+      try {
+        const parsedDate = new Date(value);
+        if (!isNaN(parsedDate.getTime())) {
+          setDate(parsedDate);
+        }
+      } catch (e) {
+        console.error(`Failed to parse date for ${name}:`, value);
+      }
+    }
+  }, [form, name]);
+
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="text-sm">{label}</FormLabel>
+          <Popover>
+            <PopoverTrigger asChild>
+              <FormControl>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full pl-3 text-left font-normal",
+                    !field.value && "text-muted-foreground"
+                  )}
+                >
+                  {field.value ? (
+                    format(new Date(field.value), "PPP")
+                  ) : (
+                    <span>Select date</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+              </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(selectedDate) => {
+                  setDate(selectedDate);
+                  if (selectedDate) {
+                    // Format the date as ISO string (YYYY-MM-DD)
+                    field.onChange(format(selectedDate, "yyyy-MM-dd"));
+                  }
+                }}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+          <FormMessage className="text-xs" />
+        </FormItem>
+      )}
+    />
+  );
+};
 
 export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddClientFormProps) {
   const form = useForm<ClientFormValues>({
@@ -132,18 +210,11 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="fiscalYearEnd"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">Fiscal Year End</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Dec 31" {...field} className="text-sm" />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
+            {/* Replace the fiscalYearEnd input with DatePickerField */}
+            <DatePickerField 
+              form={form} 
+              name="fiscalYearEnd" 
+              label="Fiscal Year End" 
             />
 
             <FormField
@@ -229,32 +300,18 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="auditStartDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">Audit Start Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} className="text-sm" />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
+            {/* Replace the auditStartDate input with DatePickerField */}
+            <DatePickerField 
+              form={form} 
+              name="auditStartDate" 
+              label="Audit Start Date" 
             />
 
-            <FormField
-              control={form.control}
-              name="auditCompletionDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm">Completion Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} className="text-sm" />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )}
+            {/* Replace the auditCompletionDate input with DatePickerField */}
+            <DatePickerField 
+              form={form} 
+              name="auditCompletionDate" 
+              label="Completion Date" 
             />
 
             <FormField
