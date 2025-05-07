@@ -38,7 +38,7 @@ const clientSchema = z.object({
   address: z.string().min(2, "Address is required"),
   constitution: z.string().min(2, "Constitution is required"),
   auditFee: z.string().min(1, "Audit fee is required"),
-  fiscalYearEnd: z.string().min(2, "Fiscal year end is required"),
+  fiscalYearEnd: z.string().min(2, "Financial year ended is required"),
   engagementType: z.string().min(2, "Engagement type is required"),
   auditStartDate: z.string().min(2, "Start date is required"),
   auditCompletionDate: z.string().min(2, "Completion date is required"),
@@ -108,7 +108,7 @@ const DatePickerField = ({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 z-50" align="start">
               <Calendar
                 mode="single"
                 selected={date}
@@ -120,7 +120,7 @@ const DatePickerField = ({
                   }
                 }}
                 initialFocus
-                className={cn("p-3 pointer-events-auto")}
+                className="p-3 pointer-events-auto"
               />
             </PopoverContent>
           </Popover>
@@ -210,11 +210,11 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
               )}
             />
 
-            {/* Replace the fiscalYearEnd input with DatePickerField */}
+            {/* Using DatePickerField with the updated label */}
             <DatePickerField 
               form={form} 
               name="fiscalYearEnd" 
-              label="Fiscal Year End" 
+              label="Financial Year Ended" 
             />
 
             <FormField
@@ -300,14 +300,13 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
               )}
             />
 
-            {/* Replace the auditStartDate input with DatePickerField */}
+            {/* Using DatePickerField for the other date fields */}
             <DatePickerField 
               form={form} 
               name="auditStartDate" 
               label="Audit Start Date" 
             />
 
-            {/* Replace the auditCompletionDate input with DatePickerField */}
             <DatePickerField 
               form={form} 
               name="auditCompletionDate" 

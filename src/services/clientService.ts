@@ -27,14 +27,8 @@ export interface Client {
 // Helper function to format date strings to ISO format
 const formatDateForDB = (dateStr: string | undefined): string | null => {
   if (!dateStr) return null;
-  
-  try {
-    // The date should already be in YYYY-MM-DD format from the datepicker
-    return dateStr;
-  } catch (e) {
-    console.error('Invalid date format:', dateStr);
-    return null;
-  }
+  // The date should already be in YYYY-MM-DD format from the datepicker
+  return dateStr;
 };
 
 export const getClients = async () => {
@@ -71,7 +65,8 @@ export const addClient = async (client: Client) => {
       name: client.name,
       industry: client.industry,
       status: client.status,
-      risk_level: client.risk,
+      // Match the exact field name expected by the database constraint
+      risk_level: client.risk || 'Medium', // Ensure we always have a valid risk level
       fiscal_year_end: formatDateForDB(client.fiscalYearEnd),
       contact_person: client.contactPerson,
       contact_role: client.contactRole,

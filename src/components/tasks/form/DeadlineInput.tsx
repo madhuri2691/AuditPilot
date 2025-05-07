@@ -60,7 +60,7 @@ export const DeadlineInput = ({ form }: DeadlineInputProps) => {
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 z-50" align="start">
               <Calendar
                 mode="single"
                 selected={date}
@@ -72,7 +72,7 @@ export const DeadlineInput = ({ form }: DeadlineInputProps) => {
                   }
                 }}
                 initialFocus
-                className={cn("p-3 pointer-events-auto")}
+                className="p-3 pointer-events-auto"
               />
             </PopoverContent>
           </Popover>
