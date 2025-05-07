@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -51,6 +52,7 @@ export function TaskForm({ onSubmit, clients: initialClients }: TaskFormProps) {
         setIsLoading(true);
         try {
           const fetchedClients = await getClients();
+          console.log("Fetched clients:", fetchedClients);
           setClients(fetchedClients.map(client => ({
             id: client.id || '',
             name: client.name

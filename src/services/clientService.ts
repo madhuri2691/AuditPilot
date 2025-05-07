@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -53,11 +54,34 @@ export const addClient = async (client: Client) => {
       throw new Error('Client name is required');
     }
 
-    console.log('Adding client:', client);
+    // Map client properties to match the database column names
+    const mappedClient = {
+      name: client.name,
+      industry: client.industry,
+      status: client.status,
+      risk_level: client.risk,
+      fiscal_year_end: client.fiscalYearEnd,
+      contact_person: client.contactPerson,
+      contact_role: client.contactRole,
+      email: client.email,
+      phone: client.phone,
+      address: client.address,
+      entity_type: client.entity_type,
+      priority: client.priority,
+      constitution: client.constitution,
+      audit_fee: client.auditFee,
+      engagement_type: client.engagementType,
+      audit_start_date: client.auditStartDate,
+      audit_completion_date: client.auditCompletionDate,
+      assignment_staff: client.assignmentStaff,
+      audit_partner: client.auditPartner
+    };
+    
+    console.log('Adding client:', mappedClient);
     
     const { data, error } = await supabase
       .from('clients')
-      .insert([client])
+      .insert([mappedClient])
       .select()
       .single();
     
@@ -85,9 +109,32 @@ export const addClient = async (client: Client) => {
 
 export const updateClient = async (id: string, client: Partial<Client>) => {
   try {
+    // Map client properties to match the database column names
+    const mappedClient: any = {};
+    
+    if (client.name) mappedClient.name = client.name;
+    if (client.industry) mappedClient.industry = client.industry;
+    if (client.status) mappedClient.status = client.status;
+    if (client.risk) mappedClient.risk_level = client.risk;
+    if (client.fiscalYearEnd) mappedClient.fiscal_year_end = client.fiscalYearEnd;
+    if (client.contactPerson) mappedClient.contact_person = client.contactPerson;
+    if (client.contactRole) mappedClient.contact_role = client.contactRole;
+    if (client.email) mappedClient.email = client.email;
+    if (client.phone) mappedClient.phone = client.phone;
+    if (client.address) mappedClient.address = client.address;
+    if (client.entity_type) mappedClient.entity_type = client.entity_type;
+    if (client.priority) mappedClient.priority = client.priority;
+    if (client.constitution) mappedClient.constitution = client.constitution;
+    if (client.auditFee) mappedClient.audit_fee = client.auditFee;
+    if (client.engagementType) mappedClient.engagement_type = client.engagementType;
+    if (client.auditStartDate) mappedClient.audit_start_date = client.auditStartDate;
+    if (client.auditCompletionDate) mappedClient.audit_completion_date = client.auditCompletionDate;
+    if (client.assignmentStaff) mappedClient.assignment_staff = client.assignmentStaff;
+    if (client.auditPartner) mappedClient.audit_partner = client.auditPartner;
+    
     const { data, error } = await supabase
       .from('clients')
-      .update(client)
+      .update(mappedClient)
       .eq('id', id)
       .select()
       .single();

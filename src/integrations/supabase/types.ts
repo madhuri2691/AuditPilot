@@ -205,10 +205,17 @@ export type Database = {
       clients: {
         Row: {
           address: string | null
+          assignment_staff: string | null
+          audit_completion_date: string | null
+          audit_fee: string | null
+          audit_partner: string | null
+          audit_start_date: string | null
+          constitution: string | null
           contact_person: string | null
           contact_role: string | null
           created_at: string
           email: string | null
+          engagement_type: string | null
           entity_type: string | null
           fiscal_year_end: string | null
           id: string
@@ -217,14 +224,22 @@ export type Database = {
           phone: string | null
           priority: string | null
           risk_level: string | null
+          status: string | null
           updated_at: string
         }
         Insert: {
           address?: string | null
+          assignment_staff?: string | null
+          audit_completion_date?: string | null
+          audit_fee?: string | null
+          audit_partner?: string | null
+          audit_start_date?: string | null
+          constitution?: string | null
           contact_person?: string | null
           contact_role?: string | null
           created_at?: string
           email?: string | null
+          engagement_type?: string | null
           entity_type?: string | null
           fiscal_year_end?: string | null
           id?: string
@@ -233,14 +248,22 @@ export type Database = {
           phone?: string | null
           priority?: string | null
           risk_level?: string | null
+          status?: string | null
           updated_at?: string
         }
         Update: {
           address?: string | null
+          assignment_staff?: string | null
+          audit_completion_date?: string | null
+          audit_fee?: string | null
+          audit_partner?: string | null
+          audit_start_date?: string | null
+          constitution?: string | null
           contact_person?: string | null
           contact_role?: string | null
           created_at?: string
           email?: string | null
+          engagement_type?: string | null
           entity_type?: string | null
           fiscal_year_end?: string | null
           id?: string
@@ -249,6 +272,7 @@ export type Database = {
           phone?: string | null
           priority?: string | null
           risk_level?: string | null
+          status?: string | null
           updated_at?: string
         }
         Relationships: []
