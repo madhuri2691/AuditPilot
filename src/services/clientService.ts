@@ -45,7 +45,31 @@ export const getClients = async () => {
       throw error;
     }
     
-    return data || [];
+    // Map database column names to client interface
+    const mappedClients = data?.map(client => ({
+      id: client.id,
+      name: client.name,
+      industry: client.industry,
+      status: client.status,
+      risk: client.risk_level, // Map from risk_level to risk
+      fiscalYearEnd: client.fiscal_year_end,
+      contactPerson: client.contact_person,
+      contactRole: client.contact_role,
+      email: client.email,
+      phone: client.phone,
+      address: client.address,
+      entity_type: client.entity_type,
+      priority: client.priority,
+      constitution: client.constitution,
+      auditFee: client.audit_fee,
+      engagementType: client.engagement_type,
+      auditStartDate: client.audit_start_date,
+      auditCompletionDate: client.audit_completion_date,
+      assignmentStaff: client.assignment_staff,
+      auditPartner: client.audit_partner
+    })) || [];
+    
+    return mappedClients;
   } catch (error: any) {
     console.error('Error fetching clients:', error);
     toast.error('Failed to load clients');
@@ -62,10 +86,13 @@ export const addClient = async (client: Client) => {
     }
 
     // Ensure risk_level is always one of the accepted values: 'High', 'Medium', or 'Low'
+    // Based on the database check constraint
     const validRiskLevels = ['High', 'Medium', 'Low'];
     const riskLevel = client.risk && validRiskLevels.includes(client.risk) 
       ? client.risk 
       : 'Medium'; // Default to 'Medium' if empty or invalid
+    
+    console.log('Processing risk level:', client.risk, '→', riskLevel);
 
     // Map client properties to match the database column names and format dates
     const mappedClient = {
@@ -110,9 +137,33 @@ export const addClient = async (client: Client) => {
       throw new Error('No data returned when adding client');
     }
     
-    console.log('Client added successfully:', data);
+    // Map the returned data back to our Client interface
+    const newClient: Client = {
+      id: data.id,
+      name: data.name,
+      industry: data.industry,
+      status: data.status,
+      risk: data.risk_level, // Map from risk_level to risk
+      fiscalYearEnd: data.fiscal_year_end,
+      contactPerson: data.contact_person,
+      contactRole: data.contact_role,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      entity_type: data.entity_type,
+      priority: data.priority,
+      constitution: data.constitution,
+      auditFee: data.audit_fee,
+      engagementType: data.engagement_type,
+      auditStartDate: data.audit_start_date,
+      auditCompletionDate: data.audit_completion_date,
+      assignmentStaff: data.assignment_staff,
+      auditPartner: data.audit_partner
+    };
+    
+    console.log('Client added successfully:', newClient);
     toast.success('Client added successfully');
-    return data;
+    return newClient;
   } catch (error: any) {
     console.error('Error adding client:', error);
     toast.error(`Failed to add client: ${error.message || 'Unknown error'}`);
