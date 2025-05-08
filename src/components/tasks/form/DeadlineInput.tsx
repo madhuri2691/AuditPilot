@@ -40,7 +40,7 @@ export const DeadlineInput = ({ form }: DeadlineInputProps) => {
       name="deadline"
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel>Period Ended</FormLabel>
+          <FormLabel>Financial Year Ended</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
@@ -61,19 +61,21 @@ export const DeadlineInput = ({ form }: DeadlineInputProps) => {
               </FormControl>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 z-50" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(selectedDate) => {
-                  setDate(selectedDate);
-                  if (selectedDate) {
-                    // Format the date as ISO string (YYYY-MM-DD)
-                    field.onChange(format(selectedDate, "yyyy-MM-dd"));
-                  }
-                }}
-                initialFocus
-                className="p-3 pointer-events-auto"
-              />
+              <div className="max-h-[300px] overflow-y-auto">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(selectedDate) => {
+                    setDate(selectedDate);
+                    if (selectedDate) {
+                      // Format the date as ISO string (YYYY-MM-DD)
+                      field.onChange(format(selectedDate, "yyyy-MM-dd"));
+                    }
+                  }}
+                  initialFocus
+                  className="p-3 pointer-events-auto"
+                />
+              </div>
             </PopoverContent>
           </Popover>
           <FormMessage />

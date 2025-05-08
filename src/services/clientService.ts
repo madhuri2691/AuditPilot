@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -60,13 +61,18 @@ export const addClient = async (client: Client) => {
       throw new Error('Client name is required');
     }
 
+    // Ensure risk_level is always one of the accepted values: 'High', 'Medium', or 'Low'
+    const validRiskLevels = ['High', 'Medium', 'Low'];
+    const riskLevel = client.risk && validRiskLevels.includes(client.risk) 
+      ? client.risk 
+      : 'Medium'; // Default to 'Medium' if empty or invalid
+
     // Map client properties to match the database column names and format dates
     const mappedClient = {
       name: client.name,
       industry: client.industry,
       status: client.status,
-      // Match the exact field name expected by the database constraint
-      risk_level: client.risk || 'Medium', // Ensure we always have a valid risk level
+      risk_level: riskLevel,
       fiscal_year_end: formatDateForDB(client.fiscalYearEnd),
       contact_person: client.contactPerson,
       contact_role: client.contactRole,
@@ -84,7 +90,7 @@ export const addClient = async (client: Client) => {
       audit_partner: client.auditPartner
     };
     
-    console.log('Adding client with formatted dates:', mappedClient);
+    console.log('Adding client with data:', mappedClient);
     
     const { data, error } = await supabase
       .from('clients')
@@ -116,13 +122,20 @@ export const addClient = async (client: Client) => {
 
 export const updateClient = async (id: string, client: Partial<Client>) => {
   try {
+    // Ensure risk_level is valid if provided
+    const validRiskLevels = ['High', 'Medium', 'Low'];
+    let riskLevel = client.risk;
+    if (client.risk && !validRiskLevels.includes(client.risk)) {
+      riskLevel = 'Medium'; // Default to 'Medium' if invalid
+    }
+
     // Map client properties to match the database column names
     const mappedClient: any = {};
     
     if (client.name) mappedClient.name = client.name;
     if (client.industry) mappedClient.industry = client.industry;
     if (client.status) mappedClient.status = client.status;
-    if (client.risk) mappedClient.risk_level = client.risk;
+    if (riskLevel) mappedClient.risk_level = riskLevel;
     if (client.fiscalYearEnd) mappedClient.fiscal_year_end = formatDateForDB(client.fiscalYearEnd);
     if (client.contactPerson) mappedClient.contact_person = client.contactPerson;
     if (client.contactRole) mappedClient.contact_role = client.contactRole;

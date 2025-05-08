@@ -108,7 +108,7 @@ const DatePickerField = ({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 z-50" align="start">
+            <PopoverContent className="w-auto p-0 z-50 max-h-[300px] overflow-y-auto" align="start">
               <Calendar
                 mode="single"
                 selected={date}
@@ -149,7 +149,7 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
       auditCompletionDate: "",
       assignmentStaff: "",
       auditPartner: "",
-      risk: "Medium",
+      risk: "Medium", // Default to Medium to ensure constraint is satisfied
       status: "Active",
     },
   });
@@ -347,7 +347,10 @@ export function AddClientForm({ onSubmit, onCancel, isSubmitting = false }: AddC
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm">Risk Level</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value || "Medium"} // Ensure default is set
+                  >
                     <FormControl>
                       <SelectTrigger className="text-sm">
                         <SelectValue placeholder="Select risk level" />
